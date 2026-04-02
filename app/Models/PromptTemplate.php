@@ -1,5 +1,4 @@
 <?php
-// app/Models/PromptTemplate.php
 
 namespace App\Models;
 

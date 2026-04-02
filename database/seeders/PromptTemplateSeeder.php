@@ -98,6 +98,7 @@ Square format 1:1, photorealistic, no text, no watermarks
 PROMPT,
             ],
 
+
             [
                 'ordre'      => 4,
                 'titre'      => 'Portrait Environnemental — Dans ton univers',
