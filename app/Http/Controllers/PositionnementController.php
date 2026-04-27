@@ -135,8 +135,11 @@ PROMPT;
 
             return response()->json(array_merge($parsed, ['generation_id' => $generation->id]));
 
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::error('Database error in Positionnement', ['msg' => $e->getMessage(), 'code' => $e->getCode()]);
+            return response()->json(['error' => 'Erreur de base de données. Réessaie plus tard.'], 500);
         } catch (\Exception $e) {
-            Log::error('Positionnement exception', ['msg' => $e->getMessage()]);
+            Log::error('Positionnement exception', ['msg' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json(['error' => 'Connexion impossible. Vérifie ta connexion.'], 500);
         }
     }
