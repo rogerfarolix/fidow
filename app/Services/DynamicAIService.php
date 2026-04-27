@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use App\Models\LlmConfiguration;
 
 class DynamicAIService
@@ -14,6 +15,16 @@ class DynamicAIService
     public function generateText(string $prompt, array $options = []): array
     {
         try {
+            // Vérifier le cache d'abord
+            $cacheKey = 'ai_response:' . md5($prompt . serialize($options));
+            $cacheTtl = config('ai.cache.ttl', 3600);
+            
+            if (config('ai.cache.enabled', true) && Cache::has($cacheKey)) {
+                $cachedResponse = Cache::get($cacheKey);
+                Log::info('AI response retrieved from cache', ['cache_key' => $cacheKey]);
+                return $cachedResponse;
+            }
+
             // Obtenir les providers actifs dans l'ordre de priorité
             $providers = LlmConfiguration::getActiveProviders()->get();
             
@@ -35,6 +46,16 @@ class DynamicAIService
                 
                 if ($result['success']) {
                     $provider->recordUsage(true);
+                    
+                    // Mettre en cache la réponse réussie
+                    if (config('ai.cache.enabled', true)) {
+                        Cache::put($cacheKey, $result, $cacheTtl);
+                        Log::info('AI response cached', ['cache_key' => $cacheKey, 'ttl' => $cacheTtl]);
+                    }
+                    
+                    // Enregistrer les métriques de performance
+                    $this->recordPerformanceMetrics($provider, $result, true);
+                    
                     return $result;
                 }
                 
@@ -43,6 +64,9 @@ class DynamicAIService
                 Log::warning("Provider {$provider->provider} failed, trying next", [
                     'error' => $result['error'] ?? 'Unknown error'
                 ]);
+                
+                // Enregistrer les métriques de performance même pour les échecs
+                $this->recordPerformanceMetrics($provider, $result, false);
             }
 
             return [
@@ -328,5 +352,183 @@ private function buildPayload(LlmConfiguration $provider, string $prompt, array 
             Log::error('Failed to update provider order', ['error' => $e->getMessage()]);
             return false;
         }
+    }
+
+    /**
+     * Enregistre les métriques de performance pour le monitoring
+     */
+    private function recordPerformanceMetrics(LlmConfiguration $provider, array $result, bool $success): void
+    {
+        $metrics = [
+            'provider' => $provider->provider,
+            'model' => $provider->model,
+            'success' => $success,
+            'response_time_ms' => $result['response_time_ms'] ?? null,
+            'error_type' => $this->getErrorType($result['error'] ?? null),
+            'timestamp' => now()->toISOString(),
+            'success_rate' => $provider->success_rate,
+            'usage_count' => $provider->usage_count,
+            'failure_count' => $provider->failure_count
+        ];
+
+        // Stocker les métriques en cache pour consultation
+        $cacheKey = "ai_metrics_{$provider->provider}";
+        $existingMetrics = Cache::get($cacheKey, []);
+        
+        // Garder seulement les 100 dernières métriques pour éviter la surcharge
+        $existingMetrics[] = $metrics;
+        if (count($existingMetrics) > 100) {
+            $existingMetrics = array_slice($existingMetrics, -100);
+        }
+        
+        Cache::put($cacheKey, $existingMetrics, 3600); // 1 heure
+
+        // Log pour monitoring externe
+        Log::info('AI Performance Metrics', $metrics);
+
+        // Vérifier si une alerte doit être déclenchée
+        $this->checkPerformanceAlerts($provider, $metrics);
+    }
+
+    /**
+     * Détermine le type d'erreur pour le monitoring
+     */
+    private function getErrorType(?string $error): string
+    {
+        if (!$error) return 'none';
+        
+        $errorLower = strtolower($error);
+        
+        if (str_contains($errorLower, 'quota') || str_contains($errorLower, 'rate limit')) {
+            return 'quota_exceeded';
+        }
+        
+        if (str_contains($errorLower, 'timeout') || str_contains($errorLower, 'connection')) {
+            return 'network';
+        }
+        
+        if (str_contains($errorLower, 'api key') || str_contains($errorLower, 'unauthorized')) {
+            return 'authentication';
+        }
+        
+        if (str_contains($errorLower, '500') || str_contains($errorLower, '502') || str_contains($errorLower, '503')) {
+            return 'server_error';
+        }
+        
+        return 'unknown';
+    }
+
+    /**
+     * Vérifie si des alertes de performance doivent être déclenchées
+     */
+    private function checkPerformanceAlerts(LlmConfiguration $provider, array $metrics): void
+    {
+        $alerts = [];
+
+        // Alertes sur le taux de succès
+        if ($metrics['success_rate'] < 50 && $metrics['usage_count'] > 10) {
+            $alerts[] = [
+                'type' => 'warning',
+                'provider' => $provider->provider,
+                'message' => "Taux de succès faible: {$metrics['success_rate']}%",
+                'metric' => 'success_rate',
+                'value' => $metrics['success_rate']
+            ];
+        }
+
+        // Alertes sur les temps de réponse
+        if ($metrics['response_time_ms'] && $metrics['response_time_ms'] > 5000) {
+            $alerts[] = [
+                'type' => 'warning',
+                'provider' => $provider->provider,
+                'message' => "Temps de réponse élevé: {$metrics['response_time_ms']}ms",
+                'metric' => 'response_time',
+                'value' => $metrics['response_time_ms']
+            ];
+        }
+
+        // Alertes sur les erreurs d'authentification
+        if ($metrics['error_type'] === 'authentication') {
+            $alerts[] = [
+                'type' => 'critical',
+                'provider' => $provider->provider,
+                'message' => 'Problème d\'authentification détecté',
+                'metric' => 'authentication_error',
+                'value' => 1
+            ];
+        }
+
+        // Stocker les alertes
+        if (!empty($alerts)) {
+            $existingAlerts = Cache::get('ai_performance_alerts', []);
+            $existingAlerts = array_merge($existingAlerts, $alerts);
+            
+            // Garder seulement les 50 dernières alertes
+            if (count($existingAlerts) > 50) {
+                $existingAlerts = array_slice($existingAlerts, -50);
+            }
+            
+            Cache::put('ai_performance_alerts', $existingAlerts, 3600);
+            
+            // Log des alertes critiques
+            foreach ($alerts as $alert) {
+                if ($alert['type'] === 'critical') {
+                    Log::critical('AI Performance Alert', $alert);
+                }
+            }
+        }
+    }
+
+    /**
+     * Obtient les métriques récentes pour un provider
+     */
+    public function getRecentMetrics(string $provider): array
+    {
+        $cacheKey = "ai_metrics_{$provider}";
+        return Cache::get($cacheKey, []);
+    }
+
+    /**
+     * Obtient toutes les alertes de performance
+     */
+    public function getPerformanceAlerts(): array
+    {
+        return Cache::get('ai_performance_alerts', []);
+    }
+
+    /**
+     * Calcule les statistiques de performance pour un provider
+     */
+    public function getPerformanceStats(string $provider): array
+    {
+        $metrics = $this->getRecentMetrics($provider);
+        
+        if (empty($metrics)) {
+            return [
+                'provider' => $provider,
+                'message' => 'No metrics available',
+                'stats' => []
+            ];
+        }
+
+        $responseTimes = array_filter(array_column($metrics, 'response_time_ms'));
+        $successCount = count(array_filter($metrics, fn($m) => $m['success']));
+        $totalCount = count($metrics);
+
+        return [
+            'provider' => $provider,
+            'period' => [
+                'start' => $metrics[0]['timestamp'] ?? null,
+                'end' => $metrics[count($metrics) - 1]['timestamp'] ?? null,
+                'total_requests' => $totalCount
+            ],
+            'stats' => [
+                'success_rate' => $totalCount > 0 ? round(($successCount / $totalCount) * 100, 2) : 0,
+                'avg_response_time_ms' => !empty($responseTimes) ? round(array_sum($responseTimes) / count($responseTimes), 2) : null,
+                'min_response_time_ms' => !empty($responseTimes) ? min($responseTimes) : null,
+                'max_response_time_ms' => !empty($responseTimes) ? max($responseTimes) : null,
+                'error_types' => array_count_values(array_column($metrics, 'error_type'))
+            ]
+        ];
     }
 }

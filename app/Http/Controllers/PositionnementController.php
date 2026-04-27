@@ -5,15 +5,15 @@ namespace App\Http\Controllers;
 
 use App\Models\PositioningGeneration;
 use App\Models\ToolUsage;
-use App\Services\AIService;
+use App\Services\DynamicAIService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class PositionnementController extends Controller
 {
-    private AIService $aiService;
+    private DynamicAIService $aiService;
 
-    public function __construct(AIService $aiService)
+    public function __construct(DynamicAIService $aiService)
     {
         $this->aiService = $aiService;
     }

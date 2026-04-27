@@ -51,7 +51,7 @@ class LlmConfigurationSeeder extends Seeder
                 'display_name'    => 'Google Gemini Flash',
                 'model'           => 'gemini-2.0-flash', // gemini-1.5-flash retiré de v1beta
                 'api_url'         => 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
-                'is_active'       => true,
+                'is_active'       => false, // Désactivé temporairement à cause du quota exceeded
                 'priority_order'  => 4,
                 'is_primary'      => false,
                 'max_tokens'      => 2048,
@@ -64,7 +64,7 @@ class LlmConfigurationSeeder extends Seeder
                 'model'           => '@cf/meta/llama-3.1-8b-instruct', // disponible sur tier gratuit
                 'api_url'         => 'https://api.cloudflare.com/client/v4/accounts/CF_ACCOUNT/ai/run/@cf/meta/llama-3.1-8b-instruct',
                 'is_active'       => true,
-                'priority_order'  => 5,
+                'priority_order'  => 4, // Passé en priorité 4 après désactivation de Google AI
                 'is_primary'      => false,
                 'max_tokens'      => 4096,
                 'temperature'     => 0.7,

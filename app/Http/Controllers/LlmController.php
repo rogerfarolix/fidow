@@ -67,12 +67,16 @@ class LlmController extends Controller
         $success = $this->aiService->setPrimaryProvider($provider);
         
         if ($success) {
-            return redirect()->route('admin.llm.index')
-                ->with('success', "Provider {$provider} défini comme principal");
+            return response()->json([
+                'success' => true,
+                'message' => "Provider {$provider} défini comme principal"
+            ]);
         }
 
-        return redirect()->route('admin.llm.index')
-            ->with('error', 'Impossible de définir ce provider comme principal');
+        return response()->json([
+            'success' => false,
+            'message' => 'Impossible de définir ce provider comme principal'
+        ], 400);
     }
 
     /**
@@ -156,22 +160,27 @@ class LlmController extends Controller
     /**
      * Réinitialise les statistiques d'un provider
      */
-    public function resetStats($provider)
-    {
-        $llmConfig = LlmConfiguration::where('provider', $provider)->firstOrFail();
-        
-        $llmConfig->update([
-            'usage_count' => 0,
-            'success_count' => 0,
-            'failure_count' => 0,
-            'last_error' => null,
-            'last_error_at' => null,
-            'last_used_at' => null,
-        ]);
+public function resetStats($provider)
+{
+    $llmConfig = LlmConfiguration::where('provider', $provider)->firstOrFail();
+    
+    $llmConfig->update([
+        'usage_count'    => 0,
+        'success_count'  => 0,
+        'failure_count'  => 0,
+        'last_error'     => null,
+        'last_error_at'  => null,
+        'last_used_at'   => null,
+    ]);
 
-        return redirect()->route('admin.llm.show', $provider)
-            ->with('success', 'Statistiques réinitialisées avec succès');
+    // Répondre JSON si requête AJAX, redirect sinon
+    if (request()->expectsJson()) {
+        return response()->json(['success' => true, 'message' => 'Statistiques réinitialisées']);
     }
+
+    return redirect()->route('admin.llm.show', $provider)
+        ->with('success', 'Statistiques réinitialisées avec succès');
+}
 
     /**
      * API pour obtenir les statistiques en temps réel

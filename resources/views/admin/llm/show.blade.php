@@ -64,22 +64,23 @@
                         </svg>
                         Tester la connexion
                     </button>
-                    @if(!$llmConfig->is_primary)
-                    <a href="{{ route('admin.llm.set-primary', $llmConfig->provider) }}"
-                       class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors inline-flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-                        </svg>
-                        Définir comme principal
-                    </a>
-                    @endif
-                    <a href="{{ route('admin.llm.reset-stats', $llmConfig->provider) }}"
-                       class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors inline-flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                        </svg>
-                        Réinitialiser stats
-                    </a>
+@if(!$llmConfig->is_primary)
+<button onclick="setPrimaryProvider('{{ $llmConfig->provider }}')"
+        class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors inline-flex items-center gap-2">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+    </svg>
+    Définir comme principal
+</button>
+@endif
+
+<button onclick="resetProviderStats('{{ $llmConfig->provider }}')"
+        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors inline-flex items-center gap-2">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+    </svg>
+    Réinitialiser stats
+</button>
                 </div>
             </div>
         </div>
@@ -248,11 +249,22 @@
 
 @push('scripts')
 <script>
+function getHeaders() {
+    const token = document.querySelector('meta[name="csrf-token"]');
+    return {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': token ? token.getAttribute('content') : ''
+    };
+}
+
 function testProvider() {
     const resultDiv = document.getElementById('test-result');
     resultDiv.innerHTML = '<span class="text-yellow-600">⏳ Test en cours…</span>';
 
-    fetch(`/admin/llm/test/{{ $llmConfig->provider }}`)
+    fetch(`/admin/llm/{{ $llmConfig->provider }}/test`, {   // ← /{provider}/test
+        method: 'POST',                                       // ← POST
+        headers: getHeaders()
+    })
         .then(r => r.json())
         .then(data => {
             if (data.success) {
@@ -266,7 +278,7 @@ function testProvider() {
                 resultDiv.innerHTML = `
                     <div class="p-3 bg-red-50 border border-red-100 rounded-lg text-red-700">
                         <div class="font-medium text-sm">✗ Échec de connexion</div>
-                        <div class="text-xs mt-1">${data.error}</div>
+                        <div class="text-xs mt-1">${data.error ?? 'Erreur inconnue'}</div>
                     </div>`;
             }
         })
@@ -277,6 +289,54 @@ function testProvider() {
                     <div class="text-xs mt-1">${error.message}</div>
                 </div>`;
         });
+}
+
+function setPrimaryProvider(provider) {
+    if (!confirm(`Définir "${provider}" comme provider principal ?`)) return;
+
+    fetch(`/admin/llm/${provider}/set-primary`, {   // ← /{provider}/set-primary
+        method: 'POST',
+        headers: getHeaders()
+    })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Provider principal mis à jour', 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showNotification('Erreur : ' + (data.message ?? 'Inconnue'), 'error');
+            }
+        })
+        .catch(err => showNotification('Erreur : ' + err.message, 'error'));
+}
+
+function resetProviderStats(provider) {
+    if (!confirm('Réinitialiser toutes les statistiques de ce provider ?')) return;
+
+    fetch(`/admin/llm/${provider}/reset-stats`, {   // ← /{provider}/reset-stats
+        method: 'POST',
+        headers: getHeaders()
+    })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Statistiques réinitialisées', 'success');
+                setTimeout(() => location.reload(), 800);
+            } else {
+                showNotification('Erreur : ' + (data.message ?? 'Inconnue'), 'error');
+            }
+        })
+        .catch(err => showNotification('Erreur : ' + err.message, 'error'));
+}
+
+function showNotification(message, type = 'info') {
+    const n = document.createElement('div');
+    n.className = `fixed top-4 right-4 px-4 py-3 rounded-lg text-white z-50 shadow-lg text-sm font-medium ${
+        type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+    }`;
+    n.textContent = message;
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 3000);
 }
 </script>
 @endpush

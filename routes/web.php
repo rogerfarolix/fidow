@@ -30,6 +30,11 @@ Route::get('/avis',        [AvisController::class, 'index'])->name('avis.index')
 Route::get('/avis/create', [AvisController::class, 'create'])->name('avis.create');
 Route::post('/avis',       [AvisController::class, 'store'])->name('avis.store');
 
+// Login générique (pour compatibilité Laravel)
+Route::get('/login', function () {
+    return redirect()->route('admin.login');
+})->name('login');
+
 // Admin
 Route::get('/admin/login',  [AdminController::class, 'loginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');

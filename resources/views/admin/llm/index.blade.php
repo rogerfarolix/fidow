@@ -255,6 +255,7 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 <script>
+
 document.addEventListener('DOMContentLoaded', function () {
     const el = document.getElementById('sortable-providers');
     if (el) {
@@ -267,87 +268,137 @@ document.addEventListener('DOMContentLoaded', function () {
     updateFallbackOrder();
 });
 
+// Helper centralisé pour les headers fetch (CSRF inclus)
+function getHeaders() {
+    const token = document.querySelector('meta[name="csrf-token"]');
+    return {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': token ? token.getAttribute('content') : ''
+    };
+}
+
 function updateFallbackOrder() {
     const providers = document.querySelectorAll('#sortable-providers [data-provider]');
     const order = Array.from(providers).map(el => el.dataset.provider);
-    document.getElementById('fallback-order').textContent = order.join(' → ');
+    const el = document.getElementById('fallback-order');
+    if (el) el.textContent = order.join(' → ');
 }
+
+// REMPLACE ces fonctions dans le <script>
 
 function testProvider(provider) {
     const statusEl = document.getElementById(`status-${provider}`);
+    if (!statusEl) return;
     statusEl.innerHTML = '<span class="text-yellow-600">⏳ Test en cours…</span>';
-    fetch(`/admin/llm/test/${provider}`)
+
+    fetch(`/admin/llm/${provider}/test`, {   // ← /{provider}/test
+        method: 'POST',                       // ← POST (pas GET)
+        headers: getHeaders()
+    })
         .then(r => r.json())
         .then(data => {
             statusEl.innerHTML = data.success
                 ? '<span class="text-green-600">✓ Connecté</span>'
-                : `<span class="text-red-600">✗ ${data.error}</span>`;
-            showNotification(data.success ? 'Connexion réussie' : 'Échec : ' + data.error, data.success ? 'success' : 'error');
+                : `<span class="text-red-600">✗ ${data.error ?? 'Erreur inconnue'}</span>`;
+            showNotification(
+                data.success ? 'Connexion réussie' : 'Échec : ' + (data.error ?? ''),
+                data.success ? 'success' : 'error'
+            );
         })
-        .catch(() => {
+        .catch(err => {
             statusEl.innerHTML = '<span class="text-red-600">✗ Erreur de test</span>';
-            showNotification('Erreur lors du test', 'error');
+            showNotification('Erreur : ' + err.message, 'error');
         });
 }
 
 function testAllConnections() {
-    fetch('/admin/llm/test-all')
+    showNotification('Tests en cours…', 'info');
+    fetch('/admin/llm/test-all', {
+        method: 'POST',                       // ← POST (pas GET)
+        headers: getHeaders()
+    })
         .then(r => r.json())
         .then(data => {
             Object.keys(data.connections).forEach(provider => {
                 const el = document.getElementById(`status-${provider}`);
+                if (!el) return;
                 el.innerHTML = data.connections[provider].available
                     ? '<span class="text-green-600">✓ Connecté</span>'
-                    : `<span class="text-red-600">✗ ${data.connections[provider].error}</span>`;
+                    : `<span class="text-red-600">✗ ${data.connections[provider].error ?? 'Erreur'}</span>`;
             });
             showNotification('Tests terminés', 'success');
         })
-        .catch(() => showNotification('Erreur lors des tests', 'error'));
+        .catch(err => showNotification('Erreur : ' + err.message, 'error'));
 }
 
 function setPrimary(provider) {
-    if (!confirm(`Définir ${provider} comme provider principal ?`)) return;
-    fetch(`/admin/llm/set-primary/${provider}`, { method: 'POST' })
+    if (!confirm(`Définir "${provider}" comme provider principal ?`)) return;
+
+    fetch(`/admin/llm/${provider}/set-primary`, {   // ← /{provider}/set-primary
+        method: 'POST',
+        headers: getHeaders()
+    })
         .then(r => r.json())
         .then(data => {
-            data.success ? (showNotification('Provider principal mis à jour', 'success'), location.reload())
-                         : showNotification('Erreur : ' + data.message, 'error');
+            if (data.success) {
+                showNotification('Provider principal mis à jour', 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showNotification('Erreur : ' + (data.message ?? 'Inconnue'), 'error');
+            }
         })
-        .catch(() => showNotification('Erreur lors de la mise à jour', 'error'));
+        .catch(err => showNotification('Erreur : ' + err.message, 'error'));
 }
 
 function toggleStatus(provider, isActive) {
-    fetch(`/admin/llm/toggle/${provider}`, {
+    const label = isActive ? 'activer' : 'désactiver';
+    if (!confirm(`Voulez-vous ${label} le provider "${provider}" ?`)) return;
+
+    fetch(`/admin/llm/${provider}/toggle`, {   // ← /{provider}/toggle
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders(),
         body: JSON.stringify({ is_active: isActive })
     })
-    .then(r => r.json())
-    .then(data => {
-        data.success ? (showNotification(data.message, 'success'), location.reload())
-                     : showNotification('Erreur : ' + data.message, 'error');
-    })
-    .catch(() => showNotification('Erreur lors de la mise à jour', 'error'));
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                showNotification(data.message ?? 'Statut mis à jour', 'success');
+                setTimeout(() => location.reload(), 800);
+            } else {
+                showNotification('Erreur : ' + (data.message ?? 'Inconnue'), 'error');
+            }
+        })
+        .catch(err => showNotification('Erreur : ' + err.message, 'error'));
 }
 
 function saveOrder() {
-    const providers = Array.from(document.querySelectorAll('#sortable-providers [data-provider]'))
-        .map(el => el.dataset.provider);
+    const providers = Array.from(
+        document.querySelectorAll('#sortable-providers [data-provider]')
+    ).map(el => el.dataset.provider);
+
+    if (providers.length === 0) {
+        showNotification('Aucun provider à ordonner', 'error');
+        return;
+    }
+
     fetch('/admin/llm/update-order', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders(),          // ← CSRF ajouté ici
         body: JSON.stringify({ providers })
     })
-    .then(r => r.json())
-    .then(data => showNotification(data.success ? 'Ordre mis à jour' : 'Erreur : ' + data.message, data.success ? 'success' : 'error'))
-    .catch(() => showNotification('Erreur lors de la mise à jour', 'error'));
+        .then(r => r.json())
+        .then(data => showNotification(
+            data.success ? 'Ordre mis à jour' : 'Erreur : ' + (data.message ?? 'Inconnue'),
+            data.success ? 'success' : 'error'
+        ))
+        .catch(err => showNotification('Erreur : ' + err.message, 'error'));
 }
 
 function refreshStats() { location.reload(); }
 
 function showNotification(message, type = 'info') {
     const n = document.createElement('div');
-    n.className = `fixed top-4 right-4 px-4 py-3 rounded-lg text-white z-50 shadow-lg text-sm font-medium ${
+    n.className = `fixed top-4 right-4 px-4 py-3 rounded-lg text-white z-50 shadow-lg text-sm font-medium transition-opacity ${
         type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-blue-600'
     }`;
     n.textContent = message;
