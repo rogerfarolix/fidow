@@ -37,4 +37,17 @@ return [
     'groq' => [
         'key' => env('GROQ_API_KEY'),
     ],
+    'mistral' => [
+        'api_key' => env('MISTRAL_API_KEY'),
+    ],
+    'google_ai' => [
+        'api_key' => env('GOOGLE_AI_API_KEY'),
+    ],
+    'cloudflare' => [
+        'api_key'    => env('CLOUDFLARE_API_KEY'),
+        'account_id' => env('CLOUDFLARE_ACCOUNT_ID'),
+    ],
+    'cerebras' => [
+        'api_key' => env('CEREBRAS_API_KEY'),
+    ],
 ];

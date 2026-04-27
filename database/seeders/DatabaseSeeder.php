@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminSeeder::class,
-            PromptTemplateSeeder::class,
+            LlmConfigurationSeeder::class,
         ]);
     }
 }

@@ -1,88 +1,127 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — Fidow</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@700;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#080606;--s1:#0f0a0a;--s2:#170e0e;--accent:#872323;--text:#f4eded;--muted:#6b5757;--border:rgba(135,35,35,.2);--green:#2ef0a0}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:grid;place-items:center;padding:24px;position:relative;overflow:hidden}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(135,35,35,.1) 0%,transparent 70%);pointer-events:none}
-body::after{content:'';position:fixed;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px;pointer-events:none}
+@extends('layouts.app')
 
-.login-wrap{position:relative;z-index:1;width:100%;max-width:420px}
+@section('title', 'Connexion Administration - Fidow')
 
-.login-header{text-align:center;margin-bottom:32px}
-.login-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px;text-decoration:none}
-.login-logo img{height:36px}
-.login-logo-text{font-family:'Cabinet Grotesk',sans-serif;font-size:22px;font-weight:900;color:var(--text)}
-.login-title{font-family:'Cabinet Grotesk',sans-serif;font-size:22px;font-weight:900;letter-spacing:-.03em;margin-bottom:6px}
-.login-sub{color:var(--muted);font-size:13px}
-
-.box{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:36px;box-shadow:0 0 80px rgba(135,35,35,.06),0 20px 60px rgba(0,0,0,.4)}
-
-.field{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-input{background:var(--s2);border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;width:100%;transition:border-color .2s,box-shadow .2s}
-input::placeholder{color:var(--muted)}
-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(135,35,35,.14)}
-
-.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent) 0%,#6b1a1a 100%);border:none;border-radius:11px;color:#fff;font-family:'Cabinet Grotesk',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;transition:all .22s;box-shadow:0 6px 22px rgba(135,35,35,.35);letter-spacing:.01em}
-.btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(135,35,35,.5)}
-
-.error{color:#e05555;font-size:13px;margin-bottom:18px;background:rgba(135,35,35,.1);border:1px solid rgba(135,35,35,.28);border-radius:10px;padding:11px 14px;line-height:1.45}
-
-.back-link{display:block;text-align:center;margin-top:20px;color:var(--muted);font-size:13px;text-decoration:none;transition:color .2s}
-.back-link:hover{color:var(--text)}
-
-.security-note{display:flex;align-items:center;gap:7px;justify-content:center;margin-top:24px;font-size:12px;color:var(--muted)}
-.security-note svg{flex-shrink:0}
-
-@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-.login-wrap{animation:rise .7s cubic-bezier(.22,1,.36,1) both}
-</style>
-</head>
-<body>
-<div class="login-wrap">
-    <div class="login-header">
-        <a href="{{ route('home') }}" class="login-logo">
-            <img src="{{ asset('assets/logo.png') }}" alt="Fidow">
-        </a>
-        <div class="login-title">Espace Administration</div>
-        <p class="login-sub">Accès réservé à l'administrateur Fidow.</p>
+@section('content')
+<div class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 -z-10 opacity-30">
+        <div class="absolute inset-0 bg-gradient-to-br from-red-50 via-white to-gray-50"></div>
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(135, 35, 35, 0.15) 1px, transparent 1px); background-size: 40px 40px;"></div>
     </div>
 
-    <div class="box">
-        @if($errors->any())
-            <div class="error">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                {{ $errors->first() }}
+    <div class="w-full max-w-md">
+        <!-- Logo et Header -->
+        <div class="text-center mb-8">
+            <a href="{{ route('home') }}" class="inline-block mb-6 group">
+                <img
+                    src="{{ asset('assets/logo.png') }}"
+                    alt="Fidow Logo"
+                    class="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105 mx-auto"
+                >
+            </a>
+            
+            <div class="inline-flex items-center space-x-2 px-4 py-2 bg-red-50 rounded-full mb-4">
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                <span class="text-red-700 font-medium text-sm">Espace Administration</span>
             </div>
-        @endif
+            
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                Connexion Admin
+            </h1>
+            <p class="text-gray-600">
+                Accès réservé à l'administrateur Fidow
+            </p>
+        </div>
 
-        <form method="POST" action="{{ route('admin.login.post') }}">
-            @csrf
-            <div class="field">
-                <label>Adresse e-mail</label>
-                <input type="email" name="email" value="{{ old('email') }}" placeholder="admin@fidow.io" required autofocus>
+        <!-- Formulaire de connexion -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+            @if($errors->any())
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-red-700 font-medium">{{ $errors->first() }}</span>
+                    </div>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('admin.login.post') }}" class="space-y-6">
+                @csrf
+                
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-semibold text-gray-900 mb-2">
+                        Adresse e-mail
+                    </label>
+                    <div class="relative">
+                        <input type="email" 
+                               id="email" 
+                               name="email" 
+                               value="{{ old('email') }}" 
+                               placeholder="admin@fidow.io"
+                               required
+                               autofocus
+                               class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0v-1.5a9 9 0 10-9 9m7.5-3.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mot de passe -->
+                <div>
+                    <label for="password" class="block text-sm font-semibold text-gray-900 mb-2">
+                        Mot de passe
+                    </label>
+                    <div class="relative">
+                        <input type="password" 
+                               id="password" 
+                               name="password" 
+                               placeholder="••••••••••"
+                               required
+                               class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bouton de connexion -->
+                <button type="submit" 
+                        class="w-full px-4 py-3 bg-red-700 text-white rounded-lg font-semibold transition-all hover:bg-red-800 hover:scale-[1.02] shadow-lg">
+                    Se connecter
+                    <svg class="w-5 h-5 inline-block ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <!-- Liens et infos -->
+        <div class="mt-8 text-center space-y-4">
+            <a href="{{ route('home') }}" 
+               class="inline-flex items-center text-gray-600 hover:text-gray-900 font-medium transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Retour au site
+            </a>
+
+            <div class="flex items-center justify-center space-x-2 text-sm text-gray-500">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+                <span>Connexion sécurisée — Fidow Admin</span>
             </div>
-            <div class="field" style="margin-bottom:22px">
-                <label>Mot de passe</label>
-                <input type="password" name="password" placeholder="••••••••••" required>
-            </div>
-            <button type="submit" class="btn">Se connecter →</button>
-        </form>
-    </div>
-
-    <a href="{{ route('home') }}" class="back-link">← Retour au site</a>
-
-    <div class="security-note">
-        <svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.5"/></svg>
-        Connexion sécurisée — Fidow Admin
+        </div>
     </div>
 </div>
-</body>
-</html>
+@endsection

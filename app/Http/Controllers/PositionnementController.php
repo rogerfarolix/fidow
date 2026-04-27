@@ -5,12 +5,19 @@ namespace App\Http\Controllers;
 
 use App\Models\PositioningGeneration;
 use App\Models\ToolUsage;
+use App\Services\AIService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class PositionnementController extends Controller
 {
+    private AIService $aiService;
+
+    public function __construct(AIService $aiService)
+    {
+        $this->aiService = $aiService;
+    }
+
     public function index()
     {
         return view('positionnement.index');
@@ -83,32 +90,25 @@ Réponds UNIQUEMENT avec un objet JSON valide. Pas de texte avant ou après. Pas
 PROMPT;
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . config('services.groq.key'),
-                'Content-Type'  => 'application/json',
-            ])->timeout(30)->post('https://api.groq.com/openai/v1/chat/completions', [
-                'model'       => 'llama-3.3-70b-versatile',
+            $aiResponse = $this->aiService->generateText($prompt, [
                 'temperature' => $isRegen ? 0.9 : 0.75,
                 'max_tokens'  => 1024,
-                'messages'    => [
-                    ['role' => 'system', 'content' => 'Tu es un expert en personal branding digital. Tu réponds UNIQUEMENT en JSON valide, sans texte additionnel.'],
-                    ['role' => 'user',   'content' => $prompt],
-                ],
             ]);
 
-            if (!$response->successful()) {
-                Log::error('Groq API error', ['status' => $response->status(), 'body' => $response->body()]);
-                return response()->json(['error' => 'Erreur API. Réessaie dans quelques secondes.'], 502);
+            if (!$aiResponse['success']) {
+                Log::error('AI Service error', ['error' => $aiResponse['error']]);
+                return response()->json(['error' => $aiResponse['error']], 502);
             }
 
-            $raw    = $response->json('choices.0.message.content', '');
-            $clean  = preg_replace('/```json|```/i', '', $raw);
-            $parsed = json_decode(trim($clean), true);
+            $parsed = $aiResponse['data'];
+            $provider = $aiResponse['provider'] ?? 'unknown';
 
-            if (json_last_error() !== JSON_ERROR_NONE || empty($parsed['p1'])) {
-                Log::error('JSON parse error', ['raw' => $raw]);
+            if (empty($parsed['p1'])) {
+                Log::error('Invalid AI response structure', ['data' => $parsed]);
                 return response()->json(['error' => 'Réponse invalide de l\'IA. Réessaie.'], 500);
             }
+
+            Log::info('Positionnement generated', ['provider' => $provider]);
 
             // Sauvegarde pour dataset IA
             $generation = PositioningGeneration::create([

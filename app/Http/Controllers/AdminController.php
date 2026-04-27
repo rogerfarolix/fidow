@@ -24,7 +24,7 @@ class AdminController extends Controller
 
         if (Auth::attempt($credentials, true)) {
             $request->session()->regenerate();
-            return redirect()->route('admin.data');
+            return redirect()->route('admin.dashboard');
         }
 
         return back()->withErrors(['email' => 'Identifiants incorrects.']);
@@ -36,6 +36,11 @@ class AdminController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('admin.login');
+    }
+
+    public function dashboard()
+    {
+        return view('admin.dashboard');
     }
 
     public function data(Request $request)
