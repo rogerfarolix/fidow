@@ -13,7 +13,7 @@ use App\Http\Controllers\LlmController;
 Route::get('/',          [AccueilController::class, 'index'])->name('home');
 Route::get('/stats',     [StatsController::class, 'index'])->name('stats');
 Route::get('/positionnement', [PositionnementController::class, 'index'])->name('positionnement');
-Route::post('/generer',  [PositionnementController::class, 'generer'])->name('generer')->middleware('api.response');
+Route::post('/generer',  [PositionnementController::class, 'generer'])->name('generer');
 Route::patch('/generation/{id}/retenir', [PositionnementController::class, 'retenirPhrase'])->name('generation.retenir');
 
 // Pages légales
