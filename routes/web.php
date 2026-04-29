@@ -13,7 +13,7 @@ use App\Http\Controllers\LlmController;
 Route::get('/',          [AccueilController::class, 'index'])->name('home');
 Route::get('/stats',     [StatsController::class, 'index'])->name('stats');
 Route::get('/positionnement', [PositionnementController::class, 'index'])->name('positionnement');
-Route::post('/generer',  [PositionnementController::class, 'generer'])->name('generer');
+Route::post('/generer',  [PositionnementController::class, 'generer'])->middleware('throttle:5,1')->name('generer');
 Route::patch('/generation/{id}/retenir', [PositionnementController::class, 'retenirPhrase'])->name('generation.retenir');
 
 // Pages légales
@@ -28,7 +28,7 @@ Route::get('/conditions-d-utilisation', function () {
 // Avis (Public)
 Route::get('/avis',        [AvisController::class, 'index'])->name('avis.index');
 Route::get('/avis/create', [AvisController::class, 'create'])->name('avis.create');
-Route::post('/avis',       [AvisController::class, 'store'])->name('avis.store');
+Route::post('/avis',       [AvisController::class, 'store'])->middleware('throttle:3,1')->name('avis.store');
 
 // Login générique (pour compatibilité Laravel)
 Route::get('/login', function () {
@@ -37,7 +37,7 @@ Route::get('/login', function () {
 
 // Admin
 Route::get('/admin/login',  [AdminController::class, 'loginForm'])->name('admin.login');
-Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
+Route::post('/admin/login', [AdminController::class, 'login'])->middleware('throttle:5,1')->name('admin.login.post');
 Route::post('/admin/logout',[AdminController::class, 'logout'])->name('admin.logout');
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
