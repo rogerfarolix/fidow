@@ -92,8 +92,77 @@
                     </svg>
                 </div>
                 <div>
-                    <div class="fst-kpi__num fst-kpi__num--blue">{{ $usagesByTool->count() }}</div>
+                    <div class="fst-kpi__num fst-kpi__num--blue">2</div>
                     <div class="fst-kpi__lbl">Outils actifs</div>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- ── RemoteDigest KPIs ── --}}
+        <div class="fst-section-sep" data-reveal>
+            <div class="fst-section-sep__line"></div>
+            <div class="fst-section-sep__label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                RemoteDigest
+            </div>
+            <div class="fst-section-sep__line"></div>
+        </div>
+
+        <div class="fst-kpi-row" data-reveal data-reveal-delay="1">
+
+            <div class="fst-kpi fst-kpi--primary">
+                <div class="fst-kpi__icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="fst-kpi__num" data-count="{{ $digestSubscribers }}">0</div>
+                    <div class="fst-kpi__lbl">Abonnés actifs</div>
+                </div>
+            </div>
+
+            <div class="fst-kpi">
+                <div class="fst-kpi__icon fst-kpi__icon--red">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="fst-kpi__num fst-kpi__num--red" data-count="{{ $digestJobsInBase }}">0</div>
+                    <div class="fst-kpi__lbl">Offres remote en base</div>
+                </div>
+            </div>
+
+            <div class="fst-kpi">
+                <div class="fst-kpi__icon fst-kpi__icon--amber">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="fst-kpi__num fst-kpi__num--amber" data-count="{{ $digestEmailsSent }}">0</div>
+                    <div class="fst-kpi__lbl">Offres envoyées (total)</div>
+                </div>
+            </div>
+
+            <div class="fst-kpi">
+                <div class="fst-kpi__icon fst-kpi__icon--blue">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="fst-kpi__num fst-kpi__num--blue">{{ $digestBySource->count() }}</div>
+                    <div class="fst-kpi__lbl">Sources actives</div>
                 </div>
             </div>
 
@@ -262,6 +331,111 @@
                 </div>
             </div>
 
+            {{-- ── Offres par domaine (RemoteDigest) ── --}}
+            <div class="fst-card" data-reveal>
+                <div class="fst-card__head">
+                    <div class="fst-card__icon fst-card__icon--blue">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="fst-eyebrow">RemoteDigest</div>
+                        <h2>Offres par domaine</h2>
+                    </div>
+                </div>
+                @php $maxDomain = $digestJobsByDomain->max('total') ?: 1; @endphp
+                <div class="fst-bars">
+                    @php
+                        $domainLabels = ['dev'=>'Développement','design'=>'Design / UX','marketing'=>'Marketing','cyber'=>'Cybersécurité','data'=>'Data / IA','product'=>'Product','other'=>'Autre'];
+                    @endphp
+                    @foreach($digestJobsByDomain as $i => $d)
+                    <div class="fst-bar-row" style="--delay:{{ $i * 80 }}ms">
+                        <div class="fst-bar-label">{{ $domainLabels[$d->domain] ?? ucfirst($d->domain) }}</div>
+                        <div class="fst-bar-track">
+                            <div class="fst-bar-fill fst-bar-fill--blue"
+                                 data-width="{{ ($d->total / $maxDomain) * 100 }}"
+                                 style="width:0"></div>
+                        </div>
+                        <div class="fst-bar-count">{{ number_format($d->total) }}</div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- ── Abonnés par domaine ── --}}
+            <div class="fst-card" data-reveal data-reveal-delay="1">
+                <div class="fst-card__head">
+                    <div class="fst-card__icon" style="background:rgba(139,92,246,.1);color:#8b5cf6;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="fst-eyebrow">RemoteDigest</div>
+                        <h2>Abonnés par domaine</h2>
+                    </div>
+                </div>
+                @if($digestSubscribersByDomain->isEmpty())
+                <p style="font-size:.9rem;color:var(--frd-text3,#9ca3af);text-align:center;padding:1.5rem 0;">Aucun abonné pour l'instant — <a href="{{ route('digest.index') }}" style="color:#872323;">être le premier</a> !</p>
+                @else
+                @php $maxSubDomain = $digestSubscribersByDomain->max('total') ?: 1; @endphp
+                <div class="fst-bars">
+                    @foreach($digestSubscribersByDomain as $i => $d)
+                    <div class="fst-bar-row" style="--delay:{{ $i * 80 }}ms">
+                        <div class="fst-bar-label">{{ $domainLabels[$d->domain] ?? ucfirst($d->domain) }}</div>
+                        <div class="fst-bar-track">
+                            <div class="fst-bar-fill" style="background:#8b5cf6;border-radius:99px;height:100%;transition:width .6s var(--f-ease);"
+                                 data-width="{{ ($d->total / $maxSubDomain) * 100 }}"
+                                 style="width:0"></div>
+                        </div>
+                        <div class="fst-bar-count">{{ number_format($d->total) }}</div>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+
+            {{-- ── Sources scrapées ── --}}
+            <div class="fst-card fst-card--full" data-reveal>
+                <div class="fst-card__head">
+                    <div class="fst-card__icon fst-card__icon--red">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="fst-eyebrow">RemoteDigest</div>
+                        <h2>Sources scrapées</h2>
+                    </div>
+                </div>
+                @php
+                    $maxSource = $digestBySource->max('total') ?: 1;
+                    $sourceLabels = ['remotive'=>'Remotive.io','weworkremotely'=>'We Work Remotely','jobicy'=>'Jobicy','workingnomads'=>'Working Nomads','jobspresso'=>'Jobspresso'];
+                @endphp
+                <div class="fst-tons-grid">
+                    @foreach($digestBySource as $i => $s)
+                    <div class="fst-ton-card" style="--delay:{{ $i * 60 }}ms">
+                        <div class="fst-ton-card__top">
+                            <span class="fst-ton-card__rank">#{{ $i + 1 }}</span>
+                            <span class="fst-ton-card__name">{{ $sourceLabels[$s->source] ?? ucfirst($s->source) }}</span>
+                        </div>
+                        <div class="fst-ton-card__bar-track">
+                            <div class="fst-ton-card__bar-fill"
+                                 data-width="{{ ($s->total / $maxSource) * 100 }}"
+                                 style="width:0"></div>
+                        </div>
+                        <div class="fst-ton-card__count">{{ number_format($s->total) }} <small>offres</small></div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
         </div>
 
         <!-- FOOTER NAV -->
@@ -291,6 +465,47 @@
     --f-red-rgb:135,35,35;
     --f-ease:cubic-bezier(.16,1,.3,1);
 }
+
+/* ── DARK MODE OVERRIDES ── */
+html.dark {
+    --f-red-rgb: 175,60,60;
+}
+html.dark .fst-page{background:#0c0c0f;}
+html.dark .fst-ring{border-color:rgba(135,35,35,.1);}
+html.dark .fst-header__title{color:#f3f4f6;}
+html.dark .fst-header__sub{color:#9ca3af;}
+html.dark .fst-breadcrumb a{color:#9ca3af;}
+html.dark .fst-kpi{background:#161619;border-color:rgba(255,255,255,.07);box-shadow:0 8px 28px rgba(0,0,0,.35);}
+html.dark .fst-kpi:hover{box-shadow:0 18px 45px rgba(0,0,0,.5);}
+html.dark .fst-kpi--primary{border-color:rgba(135,35,35,.2);box-shadow:0 8px 32px rgba(135,35,35,.15);}
+html.dark .fst-kpi__lbl{color:#6b7280;}
+html.dark .fst-card{background:#161619;border-color:rgba(255,255,255,.07);box-shadow:0 8px 32px rgba(0,0,0,.35);}
+html.dark .fst-card:hover{box-shadow:0 18px 50px rgba(0,0,0,.5);}
+html.dark .fst-card__head h2{color:#f3f4f6;}
+html.dark .fst-bar-label{color:#d1d5db;}
+html.dark .fst-bar-track{background:#1f2937;}
+html.dark .fst-bar-count{color:#6b7280;}
+html.dark .fst-chart__grid span{background:rgba(255,255,255,.04);}
+html.dark .fst-chart__axis{color:#6b7280;}
+html.dark .fst-chart__metrics{border-color:rgba(255,255,255,.05);}
+html.dark .fst-chart__metric strong{color:#f3f4f6;}
+html.dark .fst-chart__metric span{color:#6b7280;}
+html.dark .fst-ton-card{background:#111114;border-color:rgba(255,255,255,.06);}
+html.dark .fst-ton-card:hover{background:#161619;border-color:rgba(135,35,35,.2);}
+html.dark .fst-ton-card__name{color:#f3f4f6;}
+html.dark .fst-ton-card__bar-track{background:#1f2937;}
+html.dark .fst-nav-link{background:#161619;border-color:rgba(255,255,255,.07);color:#9ca3af;}
+html.dark .fst-nav-link:hover{border-color:rgba(135,35,35,.3);color:var(--f-red);}
+
+/* ── Séparateur de section ─────────────────────────────────────── */
+.fst-section-sep{display:flex;align-items:center;gap:1rem;margin:2.5rem 0 1rem;}
+.fst-section-sep__line{flex:1;height:1px;background:rgba(135,35,35,.12);}
+html.dark .fst-section-sep__line{background:rgba(255,255,255,.07);}
+.fst-section-sep__label{display:flex;align-items:center;gap:.45rem;font-size:.75rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--f-red);white-space:nowrap;padding:.3rem .75rem;border-radius:999px;background:rgba(135,35,35,.06);border:1px solid rgba(135,35,35,.14);}
+
+/* ── Barre bleue (RemoteDigest) ────────────────────────────────── */
+.fst-bar-fill--blue{background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:99px;height:100%;transition:width .6s var(--f-ease);}
+
 
 [data-reveal]{opacity:0;transform:translateY(26px);transition:opacity .65s var(--f-ease),transform .65s var(--f-ease)}
 [data-reveal].is-visible{opacity:1;transform:translateY(0)}

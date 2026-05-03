@@ -8,6 +8,7 @@ use App\Http\Controllers\PositionnementController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\LlmController;
+use App\Http\Controllers\DigestController;
 
 // Public
 Route::get('/',          [AccueilController::class, 'index'])->name('home');
@@ -34,6 +35,20 @@ Route::post('/avis',       [AvisController::class, 'store'])->middleware('thrott
 Route::get('/login', function () {
     return redirect()->route('admin.login');
 })->name('login');
+
+// ── RemoteDigest ──────────────────────────────────────────────────────────────
+Route::get('/remote-digest', [DigestController::class, 'index'])->name('digest.index');
+Route::post('/remote-digest/subscribe', [DigestController::class, 'subscribe'])
+     ->middleware('throttle:5,5')
+     ->name('digest.subscribe');
+Route::get('/remote-digest/unsubscribe/{token}', [DigestController::class, 'unsubscribe'])
+     ->name('digest.unsubscribe');
+Route::get('/remote-digest/preferences/{token}', [DigestController::class, 'preferences'])
+     ->name('digest.preferences');
+Route::post('/remote-digest/preferences/{token}', [DigestController::class, 'updatePreferences'])
+     ->name('digest.preferences.update');
+
+
 
 // Admin
 Route::get('/admin/login',  [AdminController::class, 'loginForm'])->name('admin.login');

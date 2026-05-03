@@ -2,6 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════
+   FIDOW — GLOBAL DARK MODE SYSTEM
+   Toggle class `dark` on <html> to activate dark theme
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Global transition for smooth theme switching ── */
+*, *::before, *::after {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+}
+
+/* Override for animations (don't slow them down) */
+.animate-spin, .animate-pulse, .animate-bounce,
+[class*="animate-"],
+canvas {
+    transition: none !important;
+}
+
+/* ── Global Dark Mode Variables ── */
+:root {
+    --dm-bg-page:    #f9fafb;
+    --dm-bg-card:    #ffffff;
+    --dm-bg-soft:    #f3f4f6;
+    --dm-text-1:     #111111;
+    --dm-text-2:     #374151;
+    --dm-text-3:     #6b7280;
+    --dm-text-4:     #9ca3af;
+    --dm-border:     rgba(0, 0, 0, 0.07);
+    --dm-shadow-s:   0 2px 12px rgba(0,0,0,.05);
+    --dm-shadow-m:   0 8px 32px rgba(0,0,0,.08);
+    --dm-shadow-l:   0 20px 60px rgba(0,0,0,.12);
+}
+
+html.dark {
+    --dm-bg-page:    #0c0c0f;
+    --dm-bg-card:    #161619;
+    --dm-bg-soft:    #111114;
+    --dm-text-1:     #f3f4f6;
+    --dm-text-2:     #d1d5db;
+    --dm-text-3:     #9ca3af;
+    --dm-text-4:     #6b7280;
+    --dm-border:     rgba(255, 255, 255, 0.07);
+    --dm-shadow-s:   0 2px 12px rgba(0,0,0,.4);
+    --dm-shadow-m:   0 8px 32px rgba(0,0,0,.5);
+    --dm-shadow-l:   0 20px 60px rgba(0,0,0,.65);
+}
+
+/* ── Dark mode body base ── */
+html.dark body {
+    background-color: var(--dm-bg-page);
+    color: var(--dm-text-2);
+}
+
+/* ── Dark mode scrollbar ── */
+html.dark ::-webkit-scrollbar { width: 8px; }
+html.dark ::-webkit-scrollbar-track { background: #111; }
+html.dark ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* ── Dark mode header dropdown ── */
+html.dark .group:hover > div {
+    background-color: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+}
+html.dark .group div a:hover {
+    background-color: var(--dm-bg-soft) !important;
+}
+html.dark .group div a .font-medium {
+    color: var(--dm-text-1) !important;
+}
+html.dark .group div a .text-xs {
+    color: var(--dm-text-3) !important;
+}
+
+/* ── Dark mode footer background pattern ── */
+html.dark .fixed.inset-0.-z-10 > div:first-child {
+    background-image: linear-gradient(to bottom right, #1a0a0a, #0c0c0f, #0f0f12) !important;
+}
+
+/* ── Dark mode Tailwind pagination links ── */
+html.dark nav[role="navigation"] span,
+html.dark nav[role="navigation"] a {
+    background-color: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-2) !important;
+}
+html.dark nav[role="navigation"] a:hover {
+    background-color: var(--dm-bg-soft) !important;
+}
+html.dark nav[role="navigation"] [aria-current="page"] span {
+    background-color: #872323 !important;
+    border-color: #872323 !important;
+    color: #fff !important;
+}
+
 /* Custom responsive utilities */
 @layer utilities {
     .container-responsive {

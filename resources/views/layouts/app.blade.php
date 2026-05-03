@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="fr" class="scroll-smooth" x-data="themeApp()" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,15 +21,15 @@
     
     @stack('styles')
 </head>
-<body class="bg-gray-50 text-gray-900 font-['Inter'] antialiased" x-data="{ mobileMenu: false }">
+<body class="font-['Inter'] antialiased bg-gray-50 dark:bg-[#0c0c0f] text-gray-900 dark:text-gray-100" x-data="{ mobileMenu: false }">
     
     <!-- Background Pattern -->
     <div class="fixed inset-0 -z-10 opacity-30">
-        <div class="absolute inset-0 bg-gradient-to-br from-red-50 via-white to-gray-50"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-red-50 via-white to-gray-50 dark:from-[#1a0505] dark:via-[#0c0c0f] dark:to-[#0f0f14]"></div>
         <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(135, 35, 35, 0.15) 1px, transparent 1px); background-size: 40px 40px;"></div>
     </div>
 
-    <!-- Header – même couleur que le footer -->
+    <!-- Header -->
     <header class="sticky top-0 z-50 bg-[#872323]/95 backdrop-blur-md border-b border-white/10 shadow-lg">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -51,17 +51,31 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </button>
-                        <div class="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-1 group-hover:translate-y-0">
+                        <div class="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-[#1a1a1d] rounded-xl shadow-xl border border-gray-100 dark:border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-1 group-hover:translate-y-0">
                             <div class="p-2">
-                                <a href="{{ route('positionnement') }}" class="flex items-start space-x-3 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors">
-                                    <div class="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #87232315;">
-                                        <svg class="w-4 h-4" style="color: #872323;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <a href="{{ route('positionnement') }}" class="flex items-start space-x-3 px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <div class="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-content flex-shrink-0" style="background-color: #87232315;">
+                                        <svg class="w-4 h-4 mx-auto" style="color: #872323;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
                                         </svg>
                                     </div>
                                     <div>
-                                        <div class="font-medium text-gray-900 text-sm">Positionnement Pro</div>
-                                        <div class="text-xs text-gray-500 mt-0.5">Génère ta phrase de positionnement</div>
+                                        <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Positionnement Pro</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Génère ta phrase de positionnement</div>
+                                    </div>
+                                </a>
+                                <a href="{{ route('digest.index') }}" class="flex items-start space-x-3 px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <div class="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-content flex-shrink-0" style="background-color: #87232315;">
+                                        <svg class="w-4 h-4 mx-auto" style="color: #872323;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-gray-900 dark:text-gray-100 text-sm flex items-center gap-1.5">
+                                            RemoteDigest
+                                            <span style="font-size:.65rem;background:#872323;color:#fff;padding:.1rem .4rem;border-radius:4px;font-weight:800;">NEW</span>
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">20 offres remote / jour, personnalisées</div>
                                     </div>
                                 </a>
                             </div>
@@ -69,7 +83,7 @@
                     </div>
                 </div>
 
-                <!-- Centre : Logo (blanc grâce au filtre) -->
+                <!-- Centre : Logo -->
                 <div class="flex justify-center">
                     <a href="{{ route('home') }}" class="group">
                         <img
@@ -80,7 +94,7 @@
                     </a>
                 </div>
 
-                <!-- Droite : Avis + Stats + Commencer -->
+                <!-- Droite : Avis + Stats + Dark Toggle + Commencer -->
                 <div class="flex items-center justify-start space-x-1 pl-8">
                     <a href="{{ route('avis.index') }}"
                        class="px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all font-medium text-sm">
@@ -90,6 +104,32 @@
                        class="px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all font-medium text-sm">
                         Stats
                     </a>
+
+                    <!-- Dark Mode Toggle -->
+                    <button
+                        @click="toggleDark()"
+                        class="p-2 rounded-lg hover:bg-white/10 transition-all text-white/80 hover:text-white"
+                        :title="darkMode ? 'Passer en mode clair' : 'Passer en mode sombre'"
+                        aria-label="Toggle dark mode"
+                    >
+                        <!-- Sun icon (shown in dark mode) -->
+                        <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <!-- Moon icon (shown in light mode) -->
+                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+
                     <a href="#commencer"
                        class="ml-2 px-5 py-2 text-[#872323] bg-white rounded-lg font-semibold text-sm transition-all transform hover:scale-105 shadow-sm hover:bg-white/90">
                         Commencer
@@ -106,14 +146,37 @@
                         class="h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 invert"
                     >
                 </a>
-                <button @click="mobileMenu = !mobileMenu" class="p-2 rounded-lg hover:bg-white/10 transition-colors text-white">
-                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                    <svg x-show="mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
+                <div class="flex items-center space-x-1">
+                    <!-- Dark Mode Toggle Mobile -->
+                    <button
+                        @click="toggleDark()"
+                        class="p-2 rounded-lg hover:bg-white/10 transition-colors text-white"
+                        aria-label="Toggle dark mode"
+                    >
+                        <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                    <button @click="mobileMenu = !mobileMenu" class="p-2 rounded-lg hover:bg-white/10 transition-colors text-white">
+                        <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <svg x-show="mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <!-- Mobile Menu -->
@@ -145,7 +208,7 @@
         @yield('content')
     </main>
 
-    <!-- Footer – responsive amélioré -->
+    <!-- Footer -->
     <footer style="background-color: #872323;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center sm:text-left">
@@ -212,7 +275,7 @@
                 </div>
             </div>
 
-            <!-- Bottom Bar – responsive -->
+            <!-- Bottom Bar -->
             <div class="border-t mt-8 md:mt-10 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-center md:text-left" style="border-color: rgba(255,255,255,0.2);">
                 <p class="text-white/60 text-xs md:text-sm">&copy; {{ date('Y') }} Fidow. Tous droits réservés.</p>
                 <p class="flex items-center space-x-1.5 text-white/60 text-xs md:text-sm">
@@ -229,5 +292,46 @@
     </footer>
 
     @stack('scripts')
+
+    <!-- Dark Mode Alpine Component -->
+    <script>
+    function themeApp() {
+        return {
+            darkMode: localStorage.getItem('fidow-theme') === 'dark' ||
+                      (!localStorage.getItem('fidow-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches),
+
+            init() {
+                // Apply immediately on init (before Alpine renders)
+                if (this.darkMode) {
+                    document.documentElement.classList.add('dark');
+                }
+                // Watch system preference changes
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                    if (!localStorage.getItem('fidow-theme')) {
+                        this.darkMode = e.matches;
+                    }
+                });
+            },
+
+            toggleDark() {
+                this.darkMode = !this.darkMode;
+                localStorage.setItem('fidow-theme', this.darkMode ? 'dark' : 'light');
+                if (this.darkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+        }
+    }
+
+    // Apply dark mode BEFORE Alpine hydrates (prevents flash)
+    (function() {
+        const saved = localStorage.getItem('fidow-theme');
+        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    })();
+    </script>
 </body>
 </html>

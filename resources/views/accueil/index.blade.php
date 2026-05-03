@@ -269,31 +269,53 @@
                 </div>
             </div>
 
-            <div class="ftool ftool--soon" data-reveal data-reveal-delay="1">
+
+            {{-- ── OUTIL 2 : RemoteDigest (actif) ── --}}
+            <div class="ftool ftool--active" data-reveal data-reveal-delay="1">
                 <div class="ftool__top">
-                    <div class="ftool__icon ftool__icon--dim">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    <div class="ftool__icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
                     </div>
-                    <span class="ftool__soon-badge">Bientôt</span>
+                    <span class="ftool__live">
+                        <span class="ftool__live-dot"></span>
+                        Disponible
+                    </span>
                 </div>
-                <div class="ftool__tag ftool__tag--dim">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                    IA
+                <div class="ftool__tag">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    Scraping + IA
                 </div>
-                <h3 class="ftool__name ftool__name--dim">LinkedIn Booster</h3>
-                <p class="ftool__desc ftool__desc--dim">Optimise ton profil LinkedIn pour attirer les recruteurs remote. Bio, titre accrocheur, stratégie de contenu.</p>
-                <ul class="ftool__list ftool__list--dim">
+                <h3 class="ftool__name">RemoteDigest</h3>
+                <p class="ftool__desc">20 offres remote sélectionnées par l'IA, livrées chaque soir dans ta boîte mail. Scraping de 5+ sources. Jamais les mêmes offres deux fois.</p>
+                <ul class="ftool__list">
                     <li>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                        Titres magnétiques
+                        5 sources scrapées chaque jour
                     </li>
                     <li>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                        Stratégie de contenu
+                        Matching IA sur ton profil exact
+                    </li>
+                    <li>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        Anti-doublon garanti · 0 compte requis
                     </li>
                 </ul>
-                <button class="ftool__cta ftool__cta--disabled" disabled>Disponible bientôt</button>
+                <a href="{{ route('digest.index') }}" class="ftool__cta">
+                    S'abonner gratuitement
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <div class="ftool__deco" aria-hidden="true">
+                    <div class="ftool__deco-line"></div>
+                    <div class="ftool__deco-line"></div>
+                    <div class="ftool__deco-line"></div>
+                    <div class="ftool__deco-dot"></div>
+                </div>
             </div>
+
 
             <div class="ftool ftool--soon" data-reveal data-reveal-delay="2">
                 <div class="ftool__top">
@@ -473,6 +495,44 @@
     --radius-m: 16px;
     --radius-l: 22px;
 }
+
+/* ── DARK MODE VARIABLES ─────────────────────────────────────── */
+html.dark {
+    --bg-body:  #0c0c0f;
+    --bg-white: #161619;
+    --bg-off:   #111114;
+    --text-1:   #f3f4f6;
+    --text-2:   #d1d5db;
+    --text-3:   #9ca3af;
+    --text-4:   #6b7280;
+    --border:   rgba(255,255,255,.07);
+    --shadow-s: 0 2px 12px rgba(0,0,0,.4);
+    --shadow-m: 0 8px 32px rgba(0,0,0,.5);
+    --shadow-l: 0 20px 60px rgba(0,0,0,.65);
+}
+
+/* ── DARK MODE SPECIFIC OVERRIDES ────────────────────────────── */
+html.dark .fhero { background: var(--bg-body); }
+html.dark .fhero__bg { opacity: .6; }
+html.dark .fstrip { background: #111114; border-color: rgba(255,255,255,.05); }
+html.dark .fsec { background: var(--bg-white); }
+html.dark .fsec--off { background: var(--bg-off); }
+html.dark .fsec--tools { background: var(--bg-white); }
+html.dark .fsec--stat-row { background: var(--bg-off); }
+html.dark .fsec--cta-wrap { background: var(--bg-off); }
+html.dark .fwhy__card { background: var(--bg-white); }
+html.dark .ftool { background: var(--bg-white); border-color: var(--border); }
+html.dark .ftool--active { background: linear-gradient(160deg, var(--bg-white) 60%, #1a0d0d 100%); border-color: rgba(135,35,35,.3); }
+html.dark .ftool--soon { background: var(--bg-off); }
+html.dark .ftool__cta--disabled { background: #1f2937; color: var(--text-4); }
+html.dark .fstat-row { background: var(--bg-white); border-color: var(--border); }
+html.dark .fstats { background: var(--bg-white); border-color: var(--border); }
+html.dark .ftesti { background: var(--bg-white); border-color: var(--border); }
+html.dark .ftesti--feat { background: linear-gradient(135deg, #1a0c0c, #161619); border-color: rgba(135,35,35,.2); }
+html.dark .fcta--outline { background: var(--bg-white); color: var(--text-2); border-color: var(--border); }
+html.dark .fcta--outline:hover { border-color: rgba(135,35,35,.4); color: var(--fr); }
+html.dark .fring { border-color: rgba(135,35,35,.15); }
+html.dark .fblob--top { background: radial-gradient(ellipse, rgba(135,35,35,.25) 0%, transparent 70%); }
 
 /* ── BASE ────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

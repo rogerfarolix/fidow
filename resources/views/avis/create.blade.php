@@ -191,6 +191,40 @@
 @push('styles')
 <style>
 :root{--f-red:#872323;--f-ease:cubic-bezier(.16,1,.3,1);}
+
+/* ── DARK MODE OVERRIDES ── */
+html.dark .fac-page{background:#0c0c0f;}
+html.dark .fac-header__title{color:#f3f4f6;}
+html.dark .fac-header__sub{color:#9ca3af;}
+html.dark .fac-breadcrumb a{color:#9ca3af;}
+html.dark .fac-card{background:#161619;border-color:rgba(255,255,255,.07);box-shadow:0 16px 56px rgba(0,0,0,.4);}
+html.dark .fac-info{background:rgba(135,35,35,.06);border-color:rgba(135,35,35,.15);color:#9ca3af;}
+html.dark .fac-info strong{color:#d1d5db;}
+html.dark .fac-step__dot{border-color:rgba(255,255,255,.1);color:#6b7280;}
+html.dark .fac-step--active .fac-step__dot{border-color:var(--f-red);background:var(--f-red);color:#fff;}
+html.dark .fac-step--done .fac-step__dot{border-color:#059669;background:#059669;color:#fff;}
+html.dark .fac-step__lbl{color:#6b7280;}
+html.dark .fac-step--active .fac-step__lbl{color:var(--f-red);}
+html.dark .fac-step--done .fac-step__lbl{color:#059669;}
+html.dark .fac-step__line{background:rgba(255,255,255,.08);}
+html.dark .fac-field label{color:#d1d5db;}
+html.dark .fac-field label span{color:var(--f-red);}
+html.dark .fac-input,.fac-textarea{background:#111114;border-color:rgba(255,255,255,.1);color:#f3f4f6;}
+html.dark .fac-input:focus,.fac-textarea:focus{border-color:var(--f-red);background:#161619;box-shadow:0 0 0 4px rgba(135,35,35,.12);}
+html.dark .fac-input--err{border-color:#dc2626 !important;}
+html.dark .fac-star-picker{background:#111114;border-color:rgba(255,255,255,.1);}
+html.dark .fac-hint{color:#6b7280;}
+html.dark .fac-char-count{color:#6b7280;}
+html.dark .fac-back-link{color:#6b7280;}
+html.dark .fac-back-link:hover{color:var(--f-red);}
+html.dark .fac-preview-card{background:#161619;border-color:rgba(135,35,35,.15);}
+html.dark .fac-preview__text{color:#d1d5db;}
+html.dark .fac-preview__footer{border-color:rgba(255,255,255,.06);}
+html.dark .fac-preview__footer strong{color:#f3f4f6;}
+html.dark .fac-preview__footer span{color:#6b7280;}
+html.dark .fac-preview-label{color:#6b7280;}
+html.dark .fav-nav-link{background:#161619;border-color:rgba(255,255,255,.07);color:#9ca3af;}
+html.dark .fav-nav-link:hover{border-color:rgba(135,35,35,.3);color:var(--f-red);}
 [data-reveal]{opacity:0;transform:translateY(26px);transition:opacity .65s var(--f-ease),transform .65s var(--f-ease);}
 [data-reveal].is-visible{opacity:1;transform:translateY(0);}
 [data-reveal-delay="1"]{transition-delay:.12s;}
