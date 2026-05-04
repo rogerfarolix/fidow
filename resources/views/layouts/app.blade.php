@@ -26,7 +26,8 @@
     <!-- Background Pattern -->
     <div class="fixed inset-0 -z-10 opacity-30">
         <div class="absolute inset-0 bg-gradient-to-br from-red-50 via-white to-gray-50 dark:from-[#1a0505] dark:via-[#0c0c0f] dark:to-[#0f0f14]"></div>
-        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(135, 35, 35, 0.15) 1px, transparent 1px); background-size: 40px 40px;"></div>
+        <div class="absolute inset-0 dark:hidden" style="background-image: radial-gradient(circle at 1px 1px, rgba(135, 35, 35, 0.15) 1px, transparent 1px); background-size: 40px 40px;"></div>
+        <div class="absolute inset-0 hidden dark:block" style="background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 1px); background-size: 40px 40px;"></div>
     </div>
 
     <!-- Header -->
@@ -85,12 +86,13 @@
 
                 <!-- Centre : Logo -->
                 <div class="flex justify-center">
-                    <a href="{{ route('home') }}" class="group">
+                    <a href="{{ route('home') }}" class="group flex items-center space-x-2">
                         <img
                             src="{{ asset('assets/logo.png') }}"
                             alt="Fidow Logo"
                             class="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 invert"
                         >
+                        <span class="text-white font-bold text-xl tracking-wide">FIDOW</span>
                     </a>
                 </div>
 
@@ -139,12 +141,13 @@
 
             <!-- Mobile : Logo gauche + burger droite -->
             <div class="flex md:hidden justify-between items-center h-16">
-                <a href="{{ route('home') }}" class="group">
+                <a href="{{ route('home') }}" class="group flex items-center space-x-2">
                     <img
                         src="{{ asset('assets/logo.png') }}"
                         alt="Fidow Logo"
                         class="h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 invert"
                     >
+                    <span class="text-white font-bold text-lg tracking-wide">FIDOW</span>
                 </a>
                 <div class="flex items-center space-x-1">
                     <!-- Dark Mode Toggle Mobile -->
