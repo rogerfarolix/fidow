@@ -22,8 +22,8 @@
         <main class="legal-content">
             <div class="legal-intro">
                 <p>
-                    Bienvenue sur Fidow ! Ces conditions d'utilisation régissent votre accès et votre utilisation de notre service 
-                    de génération de phrases de positionnement professionnel. En utilisant Fidow, vous acceptez ces conditions.
+                    Bienvenue sur Fidow ! Ces conditions d'utilisation régissent votre accès et votre utilisation de notre suite d'outils 
+                    pour les professionnels du remote. En utilisant Fidow, vous acceptez ces conditions.
                 </p>
             </div>
 
@@ -74,6 +74,16 @@
     --text-3: #6b7280;
     --border: rgba(0,0,0,.07);
     --shadow: 0 2px 12px rgba(0,0,0,.05);
+}
+
+.dark .legal-page {
+    --bg-body: #0c0c0f;
+    --bg-white: #1a1a1d;
+    --text-1: #f3f4f6;
+    --text-2: #d1d5db;
+    --text-3: #9ca3af;
+    --border: rgba(255,255,255,.05);
+    --shadow: 0 2px 12px rgba(0,0,0,.3);
 }
 
 body { background-color: var(--bg-body); }

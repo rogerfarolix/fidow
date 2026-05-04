@@ -214,7 +214,7 @@
     --fr:    #872323;
     --frd:   #6b1c1c;
     --bg-body: #fef7f7;
-    --bg-white: #ffffff;
+    --bg-white dark:bg-[#1a1a1d]: #ffffff;
     --text-1: #111;
     --text-2: #374151;
     --text-3: #6b7280;
@@ -319,7 +319,7 @@ body {
 }
 
 .admin-card {
-    background: var(--bg-white);
+    background: var(--bg-white dark:bg-[#1a1a1d]);
     border: 1px solid var(--border);
     border-radius: var(--radius-m);
     padding: 1.5rem;
@@ -485,7 +485,7 @@ body {
 }
 
 .admin-btn--secondary {
-    background: var(--bg-white);
+    background: var(--bg-white dark:bg-[#1a1a1d]);
     color: var(--text-2);
     border: 1px solid var(--border);
     box-shadow: var(--shadow-s);

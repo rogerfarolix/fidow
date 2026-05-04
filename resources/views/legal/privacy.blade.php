@@ -23,7 +23,7 @@
             <div class="legal-intro">
                 <p>
                     Chez Fidow, nous nous engageons à protéger votre vie privée et à garantir la sécurité de vos données personnelles. 
-                    Cette politique de confidentialité explique comment nous collectons, utilisons et protégeons vos informations lorsque vous utilisez notre service.
+                    Cette politique de confidentialité explique comment nous collectons, utilisons et protégeons vos informations lorsque vous utilisez notre suite d'outils pour professionnels du remote.
                 </p>
             </div>
 
@@ -36,7 +36,7 @@
                     <li><strong>Adresse e-mail</strong> : lors de la création d'un compte ou de la soumission d'avis</li>
                     <li><strong>Nom et prénom</strong> : pour personnaliser votre expérience et les avis</li>
                     <li><strong>Informations professionnelles</strong> : métier, niveau d'expérience, technologies</li>
-                    <li><strong>Contenu généré</strong> : phrases de positionnement que vous créez</li>
+                    <li><strong>Contenu généré & interactions</strong> : phrases de positionnement que vous créez, offres remote consultées</li>
                 </ul>
 
                 <h3>1.2 Données techniques collectées automatiquement</h3>
@@ -72,7 +72,7 @@
             <div class="legal-footer-content">
                 <p>
                     Cette politique de confidentialité s'applique à tous les utilisateurs de Fidow 
-                    et à l'ensemble de nos services en ligne.
+                    et à l'ensemble de nos services en ligne (Générateur de Positionnement, RemoteDigest, etc.).
                 </p>
                 <div class="legal-footer-links">
                     <a href="{{ route('terms') }}">Conditions d'utilisation</a>
@@ -99,6 +99,16 @@
     --text-3: #6b7280;
     --border: rgba(0,0,0,.07);
     --shadow: 0 2px 12px rgba(0,0,0,.05);
+}
+
+.dark .legal-page {
+    --bg-body: #0c0c0f;
+    --bg-white: #1a1a1d;
+    --text-1: #f3f4f6;
+    --text-2: #d1d5db;
+    --text-3: #9ca3af;
+    --border: rgba(255,255,255,.05);
+    --shadow: 0 2px 12px rgba(0,0,0,.3);
 }
 
 body {

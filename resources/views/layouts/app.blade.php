@@ -291,6 +291,63 @@
         </div>
     </footer>
 
+    <!-- Cookie Consent Modal -->
+    <div x-data="{ showCookie: !localStorage.getItem('cookie_accepted') }" 
+         x-show="showCookie" 
+         class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
+         style="display: none;">
+        
+        <!-- Overlay -->
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm"
+             x-show="showCookie"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"></div>
+
+        <!-- Modal -->
+        <div class="relative w-full max-w-md bg-white dark:bg-[#1a1a1d] rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-white/10"
+             x-show="showCookie"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+            
+            <div class="p-6 sm:p-8">
+                <!-- Icon -->
+                <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-[#872323] dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path>
+                    </svg>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                    Respect de votre vie privée
+                </h3>
+                
+                <div class="text-sm text-gray-600 dark:text-gray-300 space-y-4">
+                    <p>
+                        En poursuivant votre navigation sur Fidow, vous acceptez l'utilisation de cookies pour améliorer votre expérience utilisateur et nous permettre de réaliser des statistiques de visites.
+                    </p>
+                    <p>
+                        Pour en savoir plus, consultez notre <a href="{{ route('privacy') }}" class="text-[#872323] dark:text-red-400 hover:underline font-medium">Politique de confidentialité</a>.
+                    </p>
+                </div>
+
+                <div class="mt-8">
+                    <button @click="localStorage.setItem('cookie_accepted', 'true'); showCookie = false;" 
+                            class="w-full flex items-center justify-center px-6 py-3 bg-[#872323] text-white rounded-xl text-sm font-semibold hover:bg-red-800 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md">
+                        Accepter et continuer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @stack('scripts')
 
     <!-- Dark Mode Alpine Component -->
