@@ -18,3 +18,8 @@ Schedule::command('digest:send')->dailyAt('18:30')->withoutOverlapping();
 // Tous les dimanches à 3h : purge des offres expirées (> 14 jours)
 Schedule::command('digest:purge')->weekly()->sundays()->at('03:00')
          ->onSuccess(fn() => \Illuminate\Support\Facades\Log::info('[Scheduler] digest:purge OK'));
+
+// ── Queue Worker ─────────────────────────────────────────────────────────────
+// Chaque minute : traite les jobs en queue (emails digest, etc.)
+Schedule::command('queue:work', ['--max-jobs' => 1, '--max-time' => 60])->everyMinute()
+         ->withoutOverlapping();
