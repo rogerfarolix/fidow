@@ -75,7 +75,8 @@
                 <span class="frd-pill">Remote.co</span>
                 <span class="frd-pill">RemoteOK</span>
                 <span class="frd-pill">Trabajo.org</span>
-                <span class="frd-pill">Indeed RSS</span>
+                <span class="frd-pill">Indeed</span>
+                <span class="frd-pill">LinkedIn</span>
                 <span class="frd-pill">GitHub Jobs</span>
                 <span class="frd-pill">+ bien d'autres</span>
             </div>

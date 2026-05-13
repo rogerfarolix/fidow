@@ -6,6 +6,8 @@ use App\Models\JobListing;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Carbon;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Scrape multi-sources des offres d'emploi remote.
@@ -40,6 +42,11 @@ class MultiSourceScraperService
             'weworkremotely' => fn() => $this->fetchWWR(),
             'jobicy'         => fn() => $this->fetchRSS('https://jobicy.com/?feed=job_feed', 'jobicy'),
             'jobspresso'     => fn() => $this->fetchRSS('https://jobspresso.co/feed/', 'jobspresso'),
+
+            // ── Sources Python (Scrapling / Anti-bot bypass) ──────────────
+            'indeed'         => fn() => $this->fetchViaPython('indeed'),
+            'linkedin'       => fn() => $this->fetchViaPython('linkedin'),
+            // 'facebook'    => fn() => $this->fetchViaPython('facebook'), // Placeholder
         ];
 
         foreach ($sources as $source => $fetcher) {
@@ -139,6 +146,38 @@ class MultiSourceScraperService
     // ─────────────────────────────────────────────────────────────────────────
     // SOURCES
     // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Exécute le script Python Scrapling pour contourner les anti-bots.
+     */
+    private function fetchViaPython(string $source): array
+    {
+        $scriptPath = base_path('python_scrapers/main.py');
+        $pythonBin = base_path('python_scrapers/venv/bin/python3');
+
+        $process = new Process([$pythonBin, $scriptPath, '--source', $source]);
+        $process->setTimeout(180); // Le scraping via navigateur headless peut être lent
+        
+        try {
+            $process->mustRun();
+            
+            $output = $process->getOutput();
+            $jobs = json_decode($output, true);
+            
+            if (!is_array($jobs)) {
+                Log::error("[DigestScraper] Sortie invalide depuis Python pour {$source}: {$output}");
+                return [];
+            }
+            
+            return $jobs;
+        } catch (\Exception $e) {
+            Log::error("[DigestScraper] Échec de fetchViaPython pour {$source}: " . $e->getMessage());
+            if (isset($process) && $process instanceof Process) {
+                Log::error("[DigestScraper] Python STDERR: " . $process->getErrorOutput());
+            }
+            throw $e;
+        }
+    }
 
     /**
      * Remotive.io — API JSON publique
