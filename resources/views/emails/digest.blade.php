@@ -146,7 +146,7 @@
       @endif
 
       <div class="job-footer">
-        <a href="{{ $job->url }}" class="job-cta" target="_blank">
+        <a href="{{ route('digest.click', $job->id) }}" class="job-cta" target="_blank">
           Voir l'offre &rarr;
         </a>
       </div>

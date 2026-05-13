@@ -41,6 +41,8 @@ Route::get('/remote-digest', [DigestController::class, 'index'])->name('digest.i
 Route::post('/remote-digest/subscribe', [DigestController::class, 'subscribe'])
      ->middleware('throttle:5,5')
      ->name('digest.subscribe');
+Route::get('/remote-digest/click/{id}', [DigestController::class, 'trackClick'])
+     ->name('digest.click');
 Route::get('/remote-digest/unsubscribe/{token}', [DigestController::class, 'unsubscribe'])
      ->name('digest.unsubscribe');
 Route::get('/remote-digest/preferences/{token}', [DigestController::class, 'preferences'])

@@ -1,16 +1,18 @@
 import argparse
 import json
 import sys
+import os
 from scrapling.fetchers import StealthyFetcher
+from scrapling.core._types import ProxyRotator
 
-def scrape_indeed():
+def scrape_indeed(proxy_rotator=None):
     """
     Scrape jobs from Indeed (Proof of concept)
     """
     url = "https://www.indeed.com/jobs?q=developer&l=Remote"
     try:
         # Use stealthy fetcher to bypass antibots
-        page = StealthyFetcher.fetch(url, headless=True)
+        page = StealthyFetcher.fetch(url, headless=True, proxy=proxy_rotator)
         jobs = []
         
         # This selector might need to be adjusted based on Indeed's current layout
@@ -42,14 +44,14 @@ def scrape_indeed():
         print(json.dumps({"error": str(e)}), file=sys.stderr)
         return []
 
-def scrape_linkedin():
+def scrape_linkedin(proxy_rotator=None):
     """
     Scrape jobs from LinkedIn (Proof of concept)
     """
     # LinkedIn jobs search URL (publicly accessible sometimes without login, but very heavily protected)
     url = "https://www.linkedin.com/jobs/search/?keywords=developer&location=Remote"
     try:
-        page = StealthyFetcher.fetch(url, headless=True)
+        page = StealthyFetcher.fetch(url, headless=True, proxy=proxy_rotator)
         jobs = []
         
         job_cards = page.css('ul.jobs-search__results-list li')
@@ -83,11 +85,20 @@ def main():
     
     args = parser.parse_args()
     
+    # Check for proxies in ENV
+    proxy_rotator = None
+    proxies_env = os.environ.get("SCRAPING_PROXIES")
+    if proxies_env:
+        # Expecting comma separated proxies: http://user:pass@ip:port,http://user:pass@ip2:port
+        proxy_list = [p.strip() for p in proxies_env.split(',') if p.strip()]
+        if proxy_list:
+            proxy_rotator = ProxyRotator(proxy_list)
+    
     jobs = []
     if args.source == "indeed":
-        jobs = scrape_indeed()
+        jobs = scrape_indeed(proxy_rotator)
     elif args.source == "linkedin":
-        jobs = scrape_linkedin()
+        jobs = scrape_linkedin(proxy_rotator)
     elif args.source == "facebook":
         # Placeholder for Facebook scraping logic
         jobs = []

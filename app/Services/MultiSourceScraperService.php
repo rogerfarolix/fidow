@@ -73,6 +73,36 @@ class MultiSourceScraperService
     }
 
     /**
+     * Point d'entrée pour le scraping asynchrone (par source)
+     */
+    public function scrapeSingleSource(string $sourceName): void
+    {
+        $sources = [
+            'remotive'       => fn() => $this->fetchRemotive(),
+            'workingnomads'  => fn() => $this->fetchWorkingNomads(),
+            'weworkremotely' => fn() => $this->fetchWWR(),
+            'jobicy'         => fn() => $this->fetchRSS('https://jobicy.com/?feed=job_feed', 'jobicy'),
+            'jobspresso'     => fn() => $this->fetchRSS('https://jobspresso.co/feed/', 'jobspresso'),
+            'indeed'         => fn() => $this->fetchViaPython('indeed'),
+            'linkedin'       => fn() => $this->fetchViaPython('linkedin'),
+        ];
+
+        if (!isset($sources[$sourceName])) {
+            throw new \Exception("Source de scraping inconnue: {$sourceName}");
+        }
+
+        $jobs = $sources[$sourceName]();
+        
+        $scraped = 0;
+        foreach ($jobs as $job) {
+            if ($this->saveJob($job)) {
+                $scraped++;
+            }
+        }
+        Log::info("[DigestScraper] Single source {$sourceName} terminé. Nouvelles offres: {$scraped}");
+    }
+
+    /**
      * Sauvegarde une offre normalisée. Retourne true si nouvelle, false si doublon.
      */
     private function saveJob(array $job): bool
@@ -157,6 +187,11 @@ class MultiSourceScraperService
 
         $process = new Process([$pythonBin, $scriptPath, '--source', $source]);
         $process->setTimeout(180); // Le scraping via navigateur headless peut être lent
+        
+        $proxies = env('SCRAPING_PROXIES');
+        if ($proxies) {
+            $process->setEnv(['SCRAPING_PROXIES' => $proxies]);
+        }
         
         try {
             $process->mustRun();

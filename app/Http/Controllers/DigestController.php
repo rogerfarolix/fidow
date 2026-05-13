@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DigestSubscriber;
+use App\Models\JobListing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -120,5 +121,30 @@ class DigestController extends Controller
         ]);
 
         return back()->with('success', 'Préférences sauvegardées ! Les changements seront appliqués dès ce soir. ✅');
+    }
+
+    /**
+     * Tracking de clic sur une offre depuis un email digest.
+     * Incrémente le compteur puis redirige vers l'URL réelle de l'offre.
+     */
+    public function trackClick(string $id)
+    {
+        $job = JobListing::find($id);
+
+        if (!$job || !$job->url) {
+            abort(404, 'Offre introuvable.');
+        }
+
+        // Incrémentation atomique du compteur (évite les race conditions)
+        $job->increment('clicks');
+
+        Log::info('[DigestClick] Clic sur offre', [
+            'job_id'  => $id,
+            'title'   => $job->title,
+            'source'  => $job->source,
+            'clicks'  => $job->clicks + 1,
+        ]);
+
+        return redirect($job->url);
     }
 }
