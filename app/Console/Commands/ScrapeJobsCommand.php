@@ -22,7 +22,15 @@ class ScrapeJobsCommand extends Command
             'jobicy',
             'jobspresso',
             'indeed',
-            'linkedin'
+            'linkedin',
+            'remoteok',
+            'justremote',
+            'wellfound',
+            'flexjobs',
+            'missionfreelance',
+            '404works',
+            'jobbers',
+            'freenest'
         ];
 
         $specificSource = $this->option('source');

@@ -37,6 +37,7 @@ class MultiSourceScraperService
             // ── Sources JSON (API publiques) ──────────────────────────────
             'remotive'       => fn() => $this->fetchRemotive(),
             'workingnomads'  => fn() => $this->fetchWorkingNomads(),
+            'remoteok'       => fn() => $this->fetchRemoteOk(),
 
             // ── Sources RSS ───────────────────────────────────────────────
             'weworkremotely' => fn() => $this->fetchWWR(),
@@ -46,7 +47,13 @@ class MultiSourceScraperService
             // ── Sources Python (Scrapling / Anti-bot bypass) ──────────────
             'indeed'         => fn() => $this->fetchViaPython('indeed'),
             'linkedin'       => fn() => $this->fetchViaPython('linkedin'),
-            // 'facebook'    => fn() => $this->fetchViaPython('facebook'), // Placeholder
+            'justremote'     => fn() => $this->fetchViaPython('justremote'),
+            'wellfound'      => fn() => $this->fetchViaPython('wellfound'),
+            'flexjobs'       => fn() => $this->fetchViaPython('flexjobs'),
+            'missionfreelance'=> fn() => $this->fetchViaPython('missionfreelance'),
+            '404works'       => fn() => $this->fetchViaPython('404works'),
+            'jobbers'        => fn() => $this->fetchViaPython('jobbers'),
+            'freenest'       => fn() => $this->fetchViaPython('freenest'),
         ];
 
         foreach ($sources as $source => $fetcher) {
@@ -80,11 +87,19 @@ class MultiSourceScraperService
         $sources = [
             'remotive'       => fn() => $this->fetchRemotive(),
             'workingnomads'  => fn() => $this->fetchWorkingNomads(),
+            'remoteok'       => fn() => $this->fetchRemoteOk(),
             'weworkremotely' => fn() => $this->fetchWWR(),
             'jobicy'         => fn() => $this->fetchRSS('https://jobicy.com/?feed=job_feed', 'jobicy'),
             'jobspresso'     => fn() => $this->fetchRSS('https://jobspresso.co/feed/', 'jobspresso'),
             'indeed'         => fn() => $this->fetchViaPython('indeed'),
             'linkedin'       => fn() => $this->fetchViaPython('linkedin'),
+            'justremote'     => fn() => $this->fetchViaPython('justremote'),
+            'wellfound'      => fn() => $this->fetchViaPython('wellfound'),
+            'flexjobs'       => fn() => $this->fetchViaPython('flexjobs'),
+            'missionfreelance'=> fn() => $this->fetchViaPython('missionfreelance'),
+            '404works'       => fn() => $this->fetchViaPython('404works'),
+            'jobbers'        => fn() => $this->fetchViaPython('jobbers'),
+            'freenest'       => fn() => $this->fetchViaPython('freenest'),
         ];
 
         if (!isset($sources[$sourceName])) {
@@ -149,6 +164,38 @@ class MultiSourceScraperService
             Log::debug("[DigestScraper] saveJob skip: " . $e->getMessage());
             return false;
         }
+    }
+
+    private function fetchRemoteOk(): array
+    {
+        $jobs = [];
+        try {
+            $response = Http::timeout(10)->get('https://remoteok.com/api');
+            if ($response->successful()) {
+                $data = $response->json();
+                if (is_array($data) && count($data) > 0) {
+                    array_shift($data); // Retire le premier élément (informations légales)
+                    foreach ($data as $item) {
+                        if (empty($item['id'])) continue;
+                        
+                        $jobs[] = [
+                            'source' => 'remoteok',
+                            'title' => $item['position'] ?? 'Unknown Title',
+                            'company' => $item['company'] ?? 'Unknown',
+                            'url' => $item['url'] ?? '',
+                            'description' => strip_tags($item['description'] ?? ''),
+                            'tags' => $item['tags'] ?? [],
+                            'country' => $item['location'] ?? 'Worldwide',
+                            'contract_type' => 'full_time',
+                        ];
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Log::warning("[DigestScraper] Erreur fetchRemoteOk: " . $e->getMessage());
+        }
+        return $jobs;
+    }
     }
 
     /**

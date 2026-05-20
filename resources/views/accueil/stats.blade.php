@@ -416,7 +416,23 @@
                 </div>
                 @php
                     $maxSource = $digestBySource->max('total') ?: 1;
-                    $sourceLabels = ['remotive'=>'Remotive.io','weworkremotely'=>'We Work Remotely','jobicy'=>'Jobicy','workingnomads'=>'Working Nomads','jobspresso'=>'Jobspresso', 'indeed'=>'Indeed', 'linkedin'=>'LinkedIn'];
+                    $sourceLabels = [
+                        'remotive'=>'Remotive.io',
+                        'weworkremotely'=>'We Work Remotely',
+                        'jobicy'=>'Jobicy',
+                        'workingnomads'=>'Working Nomads',
+                        'jobspresso'=>'Jobspresso',
+                        'indeed'=>'Indeed',
+                        'linkedin'=>'LinkedIn',
+                        'remoteok'=>'Remote OK',
+                        'justremote'=>'JustRemote',
+                        'wellfound'=>'Wellfound',
+                        'flexjobs'=>'FlexJobs',
+                        'missionfreelance'=>'Mission Freelance',
+                        '404works'=>'404Works',
+                        'jobbers'=>'Jobbers',
+                        'freenest'=>'FreeNest'
+                    ];
                 @endphp
                 <div class="fst-tons-grid">
                     @foreach($digestBySource as $i => $s)

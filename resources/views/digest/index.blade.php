@@ -72,13 +72,19 @@
             <div class="frd-sources__pills">
                 <span class="frd-pill">We Work Remotely</span>
                 <span class="frd-pill">Remotive.io</span>
-                <span class="frd-pill">Remote.co</span>
-                <span class="frd-pill">RemoteOK</span>
-                <span class="frd-pill">Trabajo.org</span>
+                <span class="frd-pill">Remote OK</span>
+                <span class="frd-pill">Jobicy</span>
+                <span class="frd-pill">Working Nomads</span>
+                <span class="frd-pill">Jobspresso</span>
+                <span class="frd-pill">JustRemote</span>
+                <span class="frd-pill">Wellfound</span>
+                <span class="frd-pill">FlexJobs</span>
+                <span class="frd-pill">Mission Freelance</span>
+                <span class="frd-pill">404Works</span>
+                <span class="frd-pill">Jobbers</span>
+                <span class="frd-pill">FreeNest</span>
                 <span class="frd-pill">Indeed</span>
                 <span class="frd-pill">LinkedIn</span>
-                <span class="frd-pill">GitHub Jobs</span>
-                <span class="frd-pill">+ bien d'autres</span>
             </div>
         </section>
 
