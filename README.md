@@ -289,7 +289,7 @@ Mettez à jour le système et installez les dépendances requises (Nginx, PHP 8.
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y nginx mysql-server redis-server supervisor git unzip curl
-sudo apt install -y php8.2-fpm php8.2-mysql php8.2-xml php8.2-mbstring php8.2-curl php8.2-zip php8.2-redis
+sudo apt install -y php8.2-fpm php8.2-cli php8.2-mysql php8.2-xml php8.2-mbstring php8.2-curl php8.2-zip php8.2-redis
 ```
 
 ### 2. Installation de Node.js et Python (pour les scrapers)
