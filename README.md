@@ -279,6 +279,154 @@ python patch_admin_dark_mode.py
 - Performance des temps de réponse
 - Historique des générations
 
+## 🌍 Guide de Déploiement VPS (Ubuntu 22.04 / 24.04)
+
+Ce guide détaille les étapes pas-à-pas pour déployer Fidow en production sur un VPS.
+
+### 1. Préparation du Serveur
+Mettez à jour le système et installez les dépendances requises (Nginx, PHP 8.2+, MySQL, Redis, Supervisor, Node.js, Python).
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y nginx mysql-server redis-server supervisor git unzip curl
+sudo apt install -y php8.2-fpm php8.2-mysql php8.2-xml php8.2-mbstring php8.2-curl php8.2-zip php8.2-redis
+```
+
+### 2. Installation de Node.js et Python (pour les scrapers)
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs python3-pip python3-venv
+```
+
+### 3. Configuration de la Base de Données
+Connectez-vous à MySQL et créez la base de données pour l'application :
+```bash
+sudo mysql
+```
+```sql
+CREATE DATABASE fidow;
+CREATE USER 'fidow'@'localhost' IDENTIFIED BY 'mot_de_passe_robuste';
+GRANT ALL PRIVILEGES ON fidow.* TO 'fidow'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+### 4. Déploiement du Code
+Clonez le dépôt dans le répertoire web approprié (ex: `/var/www/`) :
+```bash
+sudo mkdir -p /var/www/Projets/nealix
+cd /var/www/Projets/nealix
+sudo git clone <votre-url-git> fidow
+cd fidow
+```
+
+### 5. Installation des Dépendances et Configuration
+Donnez les droits nécessaires à votre utilisateur pour installer les paquets :
+```bash
+sudo chown -R $USER:www-data /var/www/Projets/nealix/fidow
+
+# Installation des dépendances PHP
+composer install --optimize-autoloader --no-dev
+
+# Installation et build des dépendances frontend
+npm install
+npm run build
+
+# Création du fichier d'environnement et clé d'application
+cp .env.example .env
+php artisan key:generate
+```
+Modifiez ensuite le fichier `.env` avec les informations de votre BDD et vos clés API (Groq, Mistral, etc.). N'oubliez pas de définir `APP_ENV=production` et `APP_DEBUG=false`.
+
+### 6. Configuration Python pour les Scrapers
+Si vous utilisez les scrapers (Indeed, LinkedIn) situés dans `python_scrapers` :
+```bash
+cd /var/www/Projets/nealix/fidow/python_scrapers
+python3 -m venv venv
+source venv/bin/activate
+pip install scrapling
+deactivate
+cd ..
+```
+
+### 7. Configuration des Permissions
+Assurez-vous que les répertoires `storage` et `bootstrap/cache` sont inscriptibles par Nginx :
+```bash
+sudo chown -R www-data:www-data /var/www/Projets/nealix/fidow/storage
+sudo chown -R www-data:www-data /var/www/Projets/nealix/fidow/bootstrap/cache
+sudo chmod -R 775 /var/www/Projets/nealix/fidow/storage
+sudo chmod -R 775 /var/www/Projets/nealix/fidow/bootstrap/cache
+```
+
+### 8. Configuration de Nginx
+Créez un fichier de configuration pour le site :
+```bash
+sudo nano /etc/nginx/sites-available/fidow
+```
+```nginx
+server {
+    listen 80;
+    server_name votre-domaine.com;
+    root /var/www/Projets/nealix/fidow/public;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    index index.php;
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+```
+Activez le site et redémarrez Nginx :
+```bash
+sudo ln -s /etc/nginx/sites-available/fidow /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+### 9. Configuration de Supervisor (Queue Worker)
+Fidow utilise un système de file d'attente pour traiter les tâches en arrière-plan. Copiez le fichier de configuration Supervisor fourni :
+```bash
+sudo cp fidow-worker.conf /etc/supervisor/conf.d/
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start fidow-queue-worker:*
+```
+
+### 10. Optimisations Finales et SSL
+Exécutez les migrations, mettez en cache les configurations et installez un certificat SSL gratuit :
+```bash
+# Migrations
+php artisan migrate --force
+
+# Caches de production
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# Certificat SSL avec Certbot
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d votre-domaine.com
+```
+
 ## 🤝 Contribution
 
 1. Fork le projet
