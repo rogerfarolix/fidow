@@ -3,7 +3,10 @@ import json
 import sys
 import os
 from scrapling.fetchers import StealthyFetcher
-from scrapling.core._types import ProxyRotator
+try:
+    from scrapling.core._types import ProxyRotator
+except ImportError:
+    ProxyRotator = None
 
 def scrape_indeed(proxy_rotator=None):
     """
@@ -92,7 +95,10 @@ def main():
         # Expecting comma separated proxies: http://user:pass@ip:port,http://user:pass@ip2:port
         proxy_list = [p.strip() for p in proxies_env.split(',') if p.strip()]
         if proxy_list:
-            proxy_rotator = ProxyRotator(proxy_list)
+            if ProxyRotator:
+                proxy_rotator = ProxyRotator(proxy_list)
+            else:
+                proxy_rotator = proxy_list
     
     jobs = []
     if args.source == "indeed":
