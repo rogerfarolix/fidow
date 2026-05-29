@@ -11,7 +11,7 @@
             <h1 style="font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;color:var(--dm-text-1,#111);margin:0 0 .75rem;letter-spacing:-.03em;">Désabonnement effectué</h1>
             <p style="color:var(--dm-text-3,#6b7280);line-height:1.7;margin:0 0 2rem;font-size:.95rem;">
                 <strong style="color:var(--dm-text-2,#374151);">{{ $email }}</strong> ne recevra plus de digest RemoteDigest.<br>
-                Nous espérons avoir pu t'aider dans ta recherche d'opportunités remote. 🙏
+                Nous espérons avoir pu t'aider dans ta recherche d'opportunités remote.
             </p>
             <a href="{{ route('home') }}" style="display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 1.75rem;background:#872323;color:#fff;border-radius:14px;font-weight:800;font-size:.95rem;text-decoration:none;">
                 Retour à l'accueil

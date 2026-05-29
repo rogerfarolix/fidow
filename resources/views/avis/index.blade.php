@@ -133,7 +133,10 @@
                         </svg>
                     @endfor
                     @if($avi->note >= 5)
-                        <span class="fav-card__top-badge">★ Top avis</span>
+                        <span class="fav-card__top-badge">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            Top avis
+                        </span>
                     @endif
                 </div>
 

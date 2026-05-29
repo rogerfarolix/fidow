@@ -41,7 +41,10 @@
             <!-- Informations de sécurité -->
             <div class="mt-12 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <p class="text-sm text-blue-800 mb-2">
-                    <strong>🔐 Pourquoi cette page ?</strong>
+                    <strong>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:.3rem"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        Pourquoi cette page ?
+                    </strong>
                 </p>
                 <p class="text-xs text-blue-700">
                     Pour protéger votre sécurité, les sessions expirent automatiquement après une période d'inactivité.

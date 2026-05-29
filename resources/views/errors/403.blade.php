@@ -53,7 +53,10 @@
             <!-- Informations -->
             <div class="mt-12 p-4 bg-orange-50 border border-orange-200 rounded-lg">
                 <p class="text-sm text-orange-800 mb-2">
-                    <strong>🚋 Pourquoi cet accès refusé ?</strong>
+                    <strong>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:.3rem"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        Pourquoi cet accès refusé ?
+                    </strong>
                 </p>
                 <ul class="text-xs text-orange-700 text-left space-y-1">
                     @if(!auth()->check())

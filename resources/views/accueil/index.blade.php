@@ -18,20 +18,29 @@
         <div class="fblob fblob--right"></div>
     </div>
 
+    {{-- Photo hero — visible desktop uniquement --}}
+    <div class="fhero__photo" aria-hidden="true">
+        <img src="{{ asset('assets/1.webp') }}"
+             alt=""
+             width="600" height="700"
+             class="fhero__photo-img">
+        <div class="fhero__photo-vignette"></div>
+    </div>
+
     <div class="fhero__inner">
 
         <div class="fpill" data-reveal>
             <span class="fpill__dot"></span>
-            Gratuit · Sans inscription · Toujours disponible
+            Cotonou · Dakar · Abidjan · Lomé · Accra · Lagos &nbsp;— &nbsp;Gratuit · Sans inscription
         </div>
 
         <h1 class="fhero__h1" data-reveal data-reveal-delay="1">
-            Les bons outils pour<br>
-            <span class="fhero__accent">ta carrière remote</span>
+            Le kit de survie du<br>
+            <span class="fhero__accent">professionnel remote africain</span>
         </h1>
 
         <p class="fhero__sub" data-reveal data-reveal-delay="2">
-            Fidow regroupe une suite d'outils pratiques — certains boostés à l'IA, d'autres non — pour te positionner, te vendre et progresser dans le monde du travail à distance.
+            Positionne-toi, trouve des missions, calcule ton tarif, améliore ton LinkedIn. Tout ce qu'il faut pour décrocher des clients internationaux — depuis n'importe où en Afrique.
         </p>
 
         <div class="fhero__ctas" data-reveal data-reveal-delay="3">
@@ -75,30 +84,20 @@
 ═══════════════════════════════════════════ -->
 <div class="fstrip">
     <div class="fstrip__track">
+        @php
+        $stripItems = [
+            ['BJ','Cotonou'],['SN','Dakar'],['CI','Abidjan'],['TG','Lomé'],
+            ['GH','Accra'],['NG','Lagos'],['BF','Ouagadougou'],['CM','Douala'],
+            ['ML','Bamako'],['GN','Conakry'],['NE','Niamey'],['MA','Casablanca'],
+        ];
+        @endphp
+        @foreach(array_merge($stripItems,$stripItems) as $c)
         <span class="fstrip__item">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            100% Gratuit
+            <span class="fstrip__code">{{ $c[0] }}</span>
+            {{ $c[1] }}
         </span>
         <span class="fstrip__sep">·</span>
-        <span class="fstrip__item">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Résultats en secondes
-        </span>
-        <span class="fstrip__sep">·</span>
-        <span class="fstrip__item">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Pour la communauté remote
-        </span>
-        <span class="fstrip__sep">·</span>
-        <span class="fstrip__item">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="9" height="9" rx="1"/><rect x="13" y="2" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><rect x="13" y="13" width="9" height="9" rx="1"/></svg>
-            Multi-outils
-        </span>
-        <span class="fstrip__sep">·</span>
-        <span class="fstrip__item">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            Certains dopés à l'IA
-        </span>
+        @endforeach
     </div>
 </div>
 
@@ -196,6 +195,50 @@
 <!-- ═══════════════════════════════════════════
      TOOLS SECTION
 ═══════════════════════════════════════════ -->
+<!-- ── Dashboard Mockup ── -->
+<div class="fmockup-strip">
+    <div class="fmockup-browser" data-reveal>
+        <div class="fmockup-topbar">
+            <div class="fmockup-dot fmockup-dot--r"></div>
+            <div class="fmockup-dot fmockup-dot--y"></div>
+            <div class="fmockup-dot fmockup-dot--g"></div>
+            <div class="fmockup-url">fidow.nealix.org/positionnement</div>
+        </div>
+        <div class="fmockup-body">
+            <div class="fmockup-body-grid">
+                <div class="fmockup-kpi"><div class="fmockup-kpi__n">{{ $totalGenerations }}</div><div class="fmockup-kpi__l">Générations IA</div></div>
+                <div class="fmockup-kpi"><div class="fmockup-kpi__n">{{ $totalUsages }}</div><div class="fmockup-kpi__l">Utilisations</div></div>
+                <div class="fmockup-kpi"><div class="fmockup-kpi__n">{{ $totalAvis }}</div><div class="fmockup-kpi__l">Avis vérifiés</div></div>
+                <div class="fmockup-kpi"><div class="fmockup-kpi__n">{{ $metiersDistincts }}</div><div class="fmockup-kpi__l">Métiers</div></div>
+            </div>
+            <div class="fmockup-row">
+                <div class="fmockup-chart">
+                    <div class="fmockup-chart__title">ACTIVITÉ · 7 DERNIERS JOURS</div>
+                    <div class="fmockup-bars">
+                        <div class="fmockup-bar-item"></div>
+                        <div class="fmockup-bar-item"></div>
+                        <div class="fmockup-bar-item"></div>
+                        <div class="fmockup-bar-item"></div>
+                        <div class="fmockup-bar-item"></div>
+                        <div class="fmockup-bar-item"></div>
+                        <div class="fmockup-bar-item"></div>
+                    </div>
+                </div>
+                <div class="fmockup-list">
+                    <div class="fmockup-list__title">DERNIÈRES GÉNÉRATIONS</div>
+                    @foreach(['Dev Laravel · Dakar','UX Design · Abidjan','Data Analyst · Tunis','Product Manager · Lagos','Fullstack · Casablanca'] as $item)
+                    <div class="fmockup-list-item">
+                        <div class="fmockup-list-dot"></div>
+                        <div class="fmockup-list-line" style="width:{{ rand(40,90) }}%"></div>
+                        <span style="font-size:.62rem;color:#9ca3af;white-space:nowrap">{{ $item }}</span>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <section class="fsec fsec--tools" id="outils">
 
     <div class="ftools__bg" aria-hidden="true">
@@ -317,30 +360,89 @@
             </div>
 
 
-            <div class="ftool ftool--soon" data-reveal data-reveal-delay="2">
+            {{-- ── Simulateur TJM ── --}}
+            <div class="ftool ftool--active" data-reveal data-reveal-delay="2">
                 <div class="ftool__top">
-                    <div class="ftool__icon ftool__icon--dim">
+                    <div class="ftool__icon">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                     </div>
-                    <span class="ftool__soon-badge">Bientôt</span>
+                    <span class="ftool__live">
+                        <span class="ftool__live-dot"></span>
+                        Live
+                    </span>
                 </div>
-                <div class="ftool__tag ftool__tag--dim">
+                <div class="ftool__tag">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-                    No code
+                    No code · Calcul instant
                 </div>
-                <h3 class="ftool__name ftool__name--dim">Calculateur Freelance</h3>
-                <p class="ftool__desc ftool__desc--dim">Calcule ton TJM idéal selon tes charges et objectifs. Génère des devis complets et personnalisés.</p>
-                <ul class="ftool__list ftool__list--dim">
+                <h3 class="ftool__name">Simulateur TJM</h3>
+                <p class="ftool__desc">Calcule ton tarif journalier freelance idéal selon ton pays, ta stack et ton expérience. Résultat en temps réel.</p>
+                <ul class="ftool__list">
                     <li>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                        TJM par pays et métier
+                        14 pays couverts (Europe + Afrique)
                     </li>
                     <li>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                        Générateur de devis PDF
+                        12 stacks techniques
+                    </li>
+                    <li>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        Revenu mensuel & annuel estimé
                     </li>
                 </ul>
-                <button class="ftool__cta ftool__cta--disabled" disabled>Disponible bientôt</button>
+                <a href="{{ route('tjm.index') }}" class="ftool__cta">
+                    Calculer mon TJM
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <div class="ftool__deco" aria-hidden="true">
+                    <div class="ftool__deco-line"></div>
+                    <div class="ftool__deco-line"></div>
+                    <div class="ftool__deco-line"></div>
+                    <div class="ftool__deco-dot"></div>
+                </div>
+            </div>
+
+            {{-- ── Analyse LinkedIn ── --}}
+            <div class="ftool ftool--active" data-reveal data-reveal-delay="3">
+                <div class="ftool__top">
+                    <div class="ftool__icon" style="background:rgba(10,102,194,.1);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="rgba(10,102,194,.9)"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </div>
+                    <span class="ftool__live">
+                        <span class="ftool__live-dot"></span>
+                        IA
+                    </span>
+                </div>
+                <div class="ftool__tag" style="color:#0a66c2;background:rgba(10,102,194,.07);border-color:rgba(10,102,194,.15);">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    Analyse IA · Score / 100
+                </div>
+                <h3 class="ftool__name">Analyse LinkedIn</h3>
+                <p class="ftool__desc">Colle ton profil LinkedIn, l'IA l'analyse et te donne un score + 5 recommandations concrètes pour attirer plus de clients et recruteurs.</p>
+                <ul class="ftool__list">
+                    <li>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        Score global + 5 catégories
+                    </li>
+                    <li>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        5 recommandations prioritisées
+                    </li>
+                    <li>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        3 actions immédiates
+                    </li>
+                </ul>
+                <a href="{{ route('linkedin.analyse') }}" class="ftool__cta" style="background:#0a66c2;">
+                    Analyser mon profil
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <div class="ftool__deco" aria-hidden="true">
+                    <div class="ftool__deco-line"></div>
+                    <div class="ftool__deco-line"></div>
+                    <div class="ftool__deco-dot"></div>
+                </div>
             </div>
 
         </div>
@@ -376,6 +478,105 @@
         </div>
     </div>
 </section>
+
+
+<!-- ═══════════════════════════════════════════
+     AFRICA ADVANTAGE SECTION
+═══════════════════════════════════════════ -->
+<section class="fafrica" style="background-image:url('{{ asset('assets/4.webp') }}');background-size:cover;background-position:center;">
+    <div class="fafrica__bg-overlay"></div>
+    <div class="fcont" style="position:relative;z-index:1;">
+        <div class="fafrica__grid">
+            <div class="fafrica__left" data-reveal>
+                <div class="feyebrow" style="color:#d97706;">L'avantage géographique</div>
+                <h2 class="fsec__h2" style="color:#fff;">
+                    Depuis l'Afrique,<br>
+                    <span style="background:linear-gradient(135deg,#d97706,#f59e0b,#fcd34d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">vers le monde entier</span>
+                </h2>
+                <p style="color:rgba(255,255,255,.75);font-size:.95rem;line-height:1.75;max-width:48ch;margin-bottom:2rem;">
+                    Les freelances africains ont un avantage compétitif unique : tarifs attractifs pour les clients européens, fort pouvoir d'achat local, maîtrise du français et de l'anglais, et une nouvelle génération de talents techniques qui n'a rien à envier à personne.
+                </p>
+                <div class="fafrica__stats">
+                    <div class="fafrica__stat">
+                        <div class="fafrica__stat-n">+340%</div>
+                        <div class="fafrica__stat-l">croissance du remote tech en Afrique (2020–2024)</div>
+                    </div>
+                    <div class="fafrica__stat">
+                        <div class="fafrica__stat-n">3-5×</div>
+                        <div class="fafrica__stat-l">pouvoir d'achat local vs tarif client européen</div>
+                    </div>
+                    <div class="fafrica__stat">
+                        <div class="fafrica__stat-n">54</div>
+                        <div class="fafrica__stat-l">pays, une seule communauté remote</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fafrica__right" data-reveal data-reveal-delay="1">
+                <div class="fafrica__cities">
+                    @foreach([
+                        ['code'=>'BJ','city'=>'Cotonou','job'=>'Dev Laravel',    'highlight'=>true],
+                        ['code'=>'SN','city'=>'Dakar',   'job'=>'Fullstack JS',  'highlight'=>false],
+                        ['code'=>'CI','city'=>'Abidjan', 'job'=>'UX Designer',   'highlight'=>false],
+                        ['code'=>'TG','city'=>'Lomé',    'job'=>'Dev Mobile',    'highlight'=>false],
+                        ['code'=>'GH','city'=>'Accra',   'job'=>'Data Analyst',  'highlight'=>false],
+                        ['code'=>'NG','city'=>'Lagos',   'job'=>'Product Manager','highlight'=>false],
+                        ['code'=>'BF','city'=>'Ouagadougou','job'=>'DevOps',     'highlight'=>false],
+                        ['code'=>'CM','city'=>'Douala',  'job'=>'Cybersécurité', 'highlight'=>false],
+                    ] as $i => $city)
+                    <div class="fafrica__city {{ $city['highlight'] ? 'fafrica__city--home' : '' }}"
+                         style="animation-delay:{{ $i * 0.08 }}s">
+                        <span class="fafrica__city-code {{ $city['highlight'] ? 'fafrica__city-code--home' : '' }}">
+                            {{ $city['code'] }}
+                        </span>
+                        <div>
+                            <div class="fafrica__city-name">
+                                {{ $city['city'] }}
+                                @if($city['highlight'])
+                                    <span class="fafrica__city-home-tag">Home</span>
+                                @endif
+                            </div>
+                            <div class="fafrica__city-job">{{ $city['job'] }}</div>
+                        </div>
+                        <div class="fafrica__city-dot"></div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     COMMUNAUTÉ PHOTO BAND
+═══════════════════════════════════════════ -->
+<div class="fcommunity-band" data-reveal>
+    <div class="fcommunity-band__img">
+        <img src="{{ asset('assets/5.webp') }}"
+             alt="Communauté remote Afrique de l'Ouest"
+             width="1200" height="500"
+             loading="lazy">
+        <div class="fcommunity-band__overlay">
+            <div class="fcommunity-band__text">
+                <div style="font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.6rem;">Communauté</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:900;color:#fff;line-height:1.1;">
+                    Des professionnels du<br>
+                    <span style="background:linear-gradient(135deg,#d97706,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">remote africain</span>
+                </div>
+                <div style="margin-top:1rem;">
+                    <a href="{{ route('avis.index') }}"
+                       style="display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.4rem;border-radius:50px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:.82rem;font-weight:700;text-decoration:none;transition:all .2s;"
+                       onmouseover="this.style.background='rgba(255,255,255,.22)'"
+                       onmouseout="this.style.background='rgba(255,255,255,.12)'">
+                        Voir les avis
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- ═══════════════════════════════════════════
@@ -471,9 +672,263 @@
 @push('styles')
 <style>
 /* ═══════════════════════════════════════════════════════════════
-   FIDOW HOME — COMPLETE STYLESHEET (Responsive optimisé)
-   Thème clair teinté #872323 · Animated
+   FIDOW HOME — COMPLETE STYLESHEET
+   Africa-first · Thème clair/sombre #872323 · Animated
 ════════════════════════════════════════════════════════════════ */
+
+/* ── AFRICA ADVANTAGE SECTION ──────────────────────────────── */
+.fafrica {
+    background:linear-gradient(135deg,#0f0208 0%,#1a0505 40%,#0d0f05 80%,#050e0a 100%);
+    position:relative; overflow:hidden;
+    padding:5rem 2rem;
+}
+.fafrica::before {
+    content:''; position:absolute; inset:0;
+    background-image:radial-gradient(rgba(217,119,6,.08) 1.5px,transparent 1.5px);
+    background-size:36px 36px;
+    pointer-events:none;
+}
+.fafrica::after {
+    content:''; position:absolute;
+    width:700px; height:600px; border-radius:50%;
+    background:radial-gradient(ellipse,rgba(217,119,6,.12) 0%,transparent 70%);
+    top:-200px; right:-200px;
+    pointer-events:none;
+}
+.fafrica__grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center;
+    max-width:1100px; margin:0 auto; position:relative; z-index:1;
+}
+@media(max-width:800px){ .fafrica__grid{ grid-template-columns:1fr; gap:2.5rem; } }
+
+.fafrica__stats { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+@media(max-width:480px){ .fafrica__stats{ grid-template-columns:1fr; } }
+
+.fafrica__stat {
+    padding:1rem 1.1rem; border-radius:14px;
+    background:rgba(217,119,6,.08); border:1px solid rgba(217,119,6,.2);
+}
+.fafrica__stat-n {
+    font-family:'Space Grotesk',sans-serif;
+    font-size:1.6rem; font-weight:900; color:#f59e0b; line-height:1; margin-bottom:.3rem;
+}
+.fafrica__stat-l { font-size:.72rem; color:rgba(255,255,255,.6); line-height:1.4; }
+
+/* City cards */
+.fafrica__cities {
+    display:grid; grid-template-columns:1fr 1fr; gap:.6rem;
+}
+.fafrica__city {
+    display:flex; align-items:center; gap:.65rem;
+    padding:.8rem 1rem; border-radius:14px;
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+    transition:all .25s; cursor:default;
+    animation:cityFadeIn .5s var(--ease,cubic-bezier(.16,1,.3,1)) both;
+}
+@keyframes cityFadeIn { from{opacity:0;transform:translateY(10px)} }
+.fafrica__city:hover { background:rgba(217,119,6,.1); border-color:rgba(217,119,6,.3); transform:translateY(-2px); }
+.fafrica__city-flag { font-size:1.4rem; flex-shrink:0; }
+.fafrica__city-name { font-weight:700; font-size:.82rem; color:#fff; line-height:1; margin-bottom:.15rem; }
+.fafrica__city-job { font-size:.72rem; color:rgba(255,255,255,.5); }
+.fafrica__city-dot {
+    width:6px; height:6px; border-radius:50%; background:#22c55e;
+    flex-shrink:0; margin-left:auto;
+    box-shadow:0 0 0 2px rgba(34,197,94,.3);
+    animation:cityDotPulse 2s ease-in-out infinite;
+}
+@keyframes cityDotPulse { 0%,100%{box-shadow:0 0 0 2px rgba(34,197,94,.3)} 50%{box-shadow:0 0 0 6px rgba(34,197,94,.05)} }
+
+/* ── HERO PHOTO (desktop) ──────────────────────────────────── */
+.fhero__photo {
+    display:none;
+    position:absolute;
+    right:0; top:0; bottom:0;
+    width:42%; max-width:560px;
+    overflow:hidden; z-index:0;
+}
+@media(min-width:1080px) { .fhero__photo { display:block; } }
+.fhero__photo-img {
+    width:100%; height:100%; object-fit:cover; object-position:center top;
+}
+.fhero__photo-vignette {
+    position:absolute; inset:0;
+    background:linear-gradient(
+        to right,
+        var(--bg-body,#fef7f7) 0%,
+        rgba(254,247,247,.6) 30%,
+        transparent 60%
+    );
+}
+html.dark .fhero__photo-vignette {
+    background:linear-gradient(
+        to right,
+        var(--bg-body,#0c0c0f) 0%,
+        rgba(12,12,15,.6) 30%,
+        transparent 60%
+    );
+}
+/* Sur desktop, décaler le contenu à gauche pour laisser de la place à la photo */
+@media(min-width:1080px){
+    .fhero__inner {
+        margin-left:0; margin-right:auto;
+        text-align:left;
+        align-items:flex-start;
+        max-width:55%;
+    }
+    .fhero__ctas { justify-content:flex-start; }
+    .fhero__sub { margin-left:0; }
+    .fstats { justify-content:flex-start; }
+}
+
+/* ── COMMUNITY BAND ─────────────────────────────────────────── */
+.fcommunity-band { overflow:hidden; }
+.fcommunity-band__img {
+    position:relative; height:320px; overflow:hidden;
+}
+@media(min-width:768px){ .fcommunity-band__img { height:400px; } }
+.fcommunity-band__img img {
+    width:100%; height:100%; object-fit:cover; object-position:center;
+    transition:transform .8s ease;
+}
+.fcommunity-band:hover .fcommunity-band__img img { transform:scale(1.03); }
+.fcommunity-band__overlay {
+    position:absolute; inset:0;
+    background:linear-gradient(
+        135deg,
+        rgba(10,4,2,.75) 0%,
+        rgba(15,8,2,.6) 40%,
+        rgba(5,10,5,.55) 100%
+    );
+    display:flex; align-items:center; justify-content:center;
+    padding:2rem;
+}
+.fcommunity-band__text { max-width:520px; text-align:center; }
+
+/* ── ANIMATED STRIP (Africa cities scrolling) ──────────────── */
+.fstrip { overflow:hidden; white-space:nowrap; }
+.fstrip__track {
+    display:inline-flex; align-items:center; gap:1.5rem;
+    animation:stripScroll 35s linear infinite;
+    padding:0 1rem;
+}
+@keyframes stripScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.fstrip:hover .fstrip__track { animation-play-state:paused; }
+
+/* ── HERO IMPROVEMENTS ──────────────────────────────────────── */
+.fhero__h1 {
+    font-family:'Space Grotesk',sans-serif;
+}
+
+/* ── TOOL CARDS — mini illustrations ───────────────────────── */
+.ftool {
+    position:relative;
+    transition:transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s;
+}
+.ftool:hover { transform:translateY(-4px); }
+
+/* ── MOCKUP DASHBOARD SECTION (before tools) ───────────────── */
+.fmockup-strip {
+    padding:2rem 1.25rem; overflow:hidden;
+    display:flex; justify-content:center;
+}
+.fmockup-browser {
+    width:100%; max-width:860px;
+    background:#fff; border-radius:16px;
+    border:1.5px solid rgba(0,0,0,.08);
+    box-shadow:0 32px 80px rgba(0,0,0,.12), 0 4px 16px rgba(0,0,0,.06);
+    overflow:hidden;
+    transform:perspective(1200px) rotateX(3deg);
+    transition:transform .6s;
+}
+html.dark .fmockup-browser { background:#161619; border-color:rgba(255,255,255,.08); box-shadow:0 32px 80px rgba(0,0,0,.5); }
+.fmockup-browser:hover { transform:perspective(1200px) rotateX(0deg); }
+.fmockup-topbar {
+    height:36px; background:#f3f4f6; border-bottom:1px solid rgba(0,0,0,.07);
+    display:flex; align-items:center; padding:0 1rem; gap:.4rem;
+}
+html.dark .fmockup-topbar { background:#111; border-color:rgba(255,255,255,.06); }
+.fmockup-dot { width:10px; height:10px; border-radius:50%; }
+.fmockup-dot--r { background:#fe5f57; }
+.fmockup-dot--y { background:#febc2e; }
+.fmockup-dot--g { background:#28c840; }
+.fmockup-url {
+    flex:1; height:20px; border-radius:6px; background:rgba(0,0,0,.06);
+    font-size:.68rem; color:#9ca3af; display:flex; align-items:center; padding:0 .6rem;
+    margin:0 .75rem; max-width:220px;
+}
+.fmockup-body { padding:1.25rem 1.5rem; }
+.fmockup-body-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1rem; }
+@media(max-width:500px){ .fmockup-body-grid{ grid-template-columns:repeat(2,1fr); } }
+.fmockup-kpi {
+    background:rgba(135,35,35,.04); border-radius:10px; padding:.85rem;
+    border:1px solid rgba(135,35,35,.08);
+}
+html.dark .fmockup-kpi { background:rgba(135,35,35,.08); border-color:rgba(200,60,60,.12); }
+.fmockup-kpi__n { font-family:'Space Grotesk',sans-serif; font-size:1.4rem; font-weight:900; color:var(--fr,#872323); margin-bottom:.2rem; }
+.fmockup-kpi__l { font-size:.68rem; color:#9ca3af; }
+.fmockup-row { display:flex; gap:1rem; }
+.fmockup-chart { flex:2; background:rgba(135,35,35,.03); border-radius:10px; padding:1rem; border:1px solid rgba(135,35,35,.06); }
+html.dark .fmockup-chart { background:rgba(135,35,35,.06); }
+.fmockup-chart__title { font-size:.7rem; font-weight:700; color:#6b7280; margin-bottom:.75rem; }
+.fmockup-bars { display:flex; align-items:flex-end; gap:.35rem; height:60px; }
+.fmockup-bar-item { flex:1; border-radius:4px 4px 0 0; background:rgba(135,35,35,.15); transition:height .6s; }
+.fmockup-bar-item:nth-child(1) { height:40%; }
+.fmockup-bar-item:nth-child(2) { height:60%; }
+.fmockup-bar-item:nth-child(3) { height:45%; }
+.fmockup-bar-item:nth-child(4) { height:80%; }
+.fmockup-bar-item:nth-child(5) { height:55%; }
+.fmockup-bar-item:nth-child(6) { height:90%; background:rgba(135,35,35,.5); }
+.fmockup-bar-item:nth-child(7) { height:70%; }
+.fmockup-list { flex:1; background:rgba(135,35,35,.03); border-radius:10px; padding:1rem; border:1px solid rgba(135,35,35,.06); }
+html.dark .fmockup-list { background:rgba(135,35,35,.06); }
+.fmockup-list__title { font-size:.7rem; font-weight:700; color:#6b7280; margin-bottom:.6rem; }
+.fmockup-list-item { display:flex; align-items:center; gap:.4rem; padding:.3rem 0; border-bottom:1px solid rgba(0,0,0,.04); }
+html.dark .fmockup-list-item { border-color:rgba(255,255,255,.03); }
+.fmockup-list-item:last-child { border:none; }
+.fmockup-list-dot { width:6px; height:6px; border-radius:50%; background:rgba(135,35,35,.4); flex-shrink:0; }
+.fmockup-list-line { height:7px; border-radius:3.5px; background:rgba(135,35,35,.08); flex:1; }
+
+/* ── Strip country code badge ── */
+.fstrip__code {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:17px; border-radius:3px;
+    background:rgba(135,35,35,.12); color:#872323;
+    font-size:.58rem; font-weight:900; font-family:monospace;
+    border:1px solid rgba(135,35,35,.18); flex-shrink:0;
+}
+
+/* ── Africa section overlay ── */
+.fafrica__bg-overlay {
+    position:absolute; inset:0;
+    background:linear-gradient(135deg,rgba(10,2,4,.88) 0%,rgba(20,5,2,.82) 40%,rgba(8,14,4,.85) 100%);
+}
+.fafrica { position:relative; }
+
+/* ── Africa city code badge ── */
+.fafrica__city-code {
+    flex-shrink:0; width:32px; height:24px; border-radius:5px;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+    color:rgba(255,255,255,.8); font-size:.65rem; font-weight:900; font-family:monospace;
+    display:flex; align-items:center; justify-content:center;
+}
+.fafrica__city-code--home {
+    background:rgba(217,119,6,.3); border-color:rgba(217,119,6,.6); color:#fcd34d;
+}
+.fafrica__city--home { border-color:rgba(217,119,6,.35) !important; background:rgba(217,119,6,.06) !important; }
+.fafrica__city-home-tag {
+    display:inline-block; margin-left:.35rem;
+    font-size:.58rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+    background:rgba(217,119,6,.3); color:#fcd34d; padding:.05rem .35rem; border-radius:3px;
+}
+
+/* ─ RESPONSIVE MOBILE ─ */
+@media(max-width:640px){
+    .fafrica { padding:3.5rem 1rem; }
+    .fafrica__stats { grid-template-columns:1fr 1fr; }
+    .fafrica__cities { grid-template-columns:1fr; }
+    .fmockup-strip { padding:1.5rem .75rem; }
+    .fmockup-row { flex-direction:column; }
+}
 
 /* ── VARIABLES ───────────────────────────────────────────────── */
 :root {

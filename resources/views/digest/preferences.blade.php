@@ -6,7 +6,8 @@
 
         <div style="text-align:center;margin-bottom:2rem;">
             <div style="display:inline-flex;align-items:center;gap:.5rem;padding:.42rem .9rem;border-radius:999px;background:rgba(135,35,35,.07);border:1px solid rgba(135,35,35,.14);color:#872323;font-size:.78rem;font-weight:700;margin-bottom:1rem;">
-                📡 RemoteDigest
+                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12.55a11 11 0 0114.08 0"/><path d="M1.42 9a16 16 0 0121.16 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+                RemoteDigest
             </div>
             <h1 style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--dm-text-1,#111);margin:0 0 .5rem;">Mes préférences</h1>
             <p style="color:var(--dm-text-3,#6b7280);font-size:.95rem;margin:0;">

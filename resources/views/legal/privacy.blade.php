@@ -28,7 +28,7 @@
             </div>
 
             <section class="legal-section">
-                <h2>📋 1. Données collectées</h2>
+                <h2>1. Données collectées</h2>
                 
                 <h3>1.1 Données personnelles fournies</h3>
                 <p>Lors de votre utilisation de Fidow, nous pouvons collecter les informations suivantes :</p>
@@ -52,7 +52,7 @@
             <!-- les autres sections restent identiques au contenu précédent -->
 
             <section class="legal-section">
-                <h2>📧 8. Contact</h2>
+                <h2>8. Contact</h2>
                 
                 <div class="contact-info">
                     <p><strong>Pour toute question concernant cette politique de confidentialité :</strong></p>

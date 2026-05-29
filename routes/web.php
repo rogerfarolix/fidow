@@ -9,6 +9,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\LlmController;
 use App\Http\Controllers\DigestController;
+use App\Http\Controllers\LinkedinAnalyseController;
+use App\Http\Controllers\TjmController;
 
 // Public
 Route::get('/',          [AccueilController::class, 'index'])->name('home');
@@ -25,6 +27,23 @@ Route::get('/politique-de-confidentialite', function () {
 Route::get('/conditions-d-utilisation', function () {
     return view('legal.terms');
 })->name('terms');
+
+// Documentation & Don
+Route::get('/docs', function () {
+    return view('docs.index');
+})->name('docs');
+
+Route::get('/don', function () {
+    return view('don.index');
+})->name('don');
+
+// Nouveaux outils
+Route::get('/simulateur-tjm', [TjmController::class, 'index'])->name('tjm.index');
+
+Route::get('/analyse-linkedin', [LinkedinAnalyseController::class, 'index'])->name('linkedin.analyse');
+Route::post('/analyse-linkedin', [LinkedinAnalyseController::class, 'analyser'])
+     ->middleware('throttle:5,5')
+     ->name('linkedin.analyser');
 
 // Avis (Public)
 Route::get('/avis',        [AvisController::class, 'index'])->name('avis.index');

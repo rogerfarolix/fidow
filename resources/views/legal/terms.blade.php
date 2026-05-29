@@ -30,7 +30,7 @@
             <!-- Toutes les sections 1 à 10 conservées à l'identique -->
 
             <section class="legal-section">
-                <h2>📧 11. Contact</h2>
+                <h2>11. Contact</h2>
                 
                 <div class="contact-info">
                     <p><strong>Pour toute question concernant ces conditions d'utilisation :</strong></p>

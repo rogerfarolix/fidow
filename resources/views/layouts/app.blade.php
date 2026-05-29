@@ -23,11 +23,17 @@
 </head>
 <body class="font-['Inter'] antialiased bg-gray-50 dark:bg-[#0c0c0f] text-gray-900 dark:text-gray-100" x-data="{ mobileMenu: false }">
     
-    <!-- Background Pattern -->
-    <div class="fixed inset-0 -z-10 opacity-30">
-        <div class="absolute inset-0 bg-gradient-to-br from-red-50 via-white to-gray-50 dark:from-[#1a0505] dark:via-[#0c0c0f] dark:to-[#0f0f14]"></div>
-        <div class="absolute inset-0 dark:hidden" style="background-image: radial-gradient(circle at 1px 1px, rgba(135, 35, 35, 0.15) 1px, transparent 1px); background-size: 40px 40px;"></div>
-        <div class="absolute inset-0 hidden dark:block" style="background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 1px); background-size: 40px 40px;"></div>
+    <!-- Scroll progress bar -->
+    <div id="scroll-progress" role="progressbar" aria-hidden="true"></div>
+
+    <!-- Animated background — orbs flottants + grille -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+        <div class="absolute inset-0 bg-[#fef7f7] dark:bg-[#0a0a0d]"></div>
+        <div class="fidow-orb fidow-orb--1"></div>
+        <div class="fidow-orb fidow-orb--2"></div>
+        <div class="fidow-orb fidow-orb--3"></div>
+        <div class="fidow-orb fidow-orb--4"></div>
+        <div class="fidow-grid"></div>
     </div>
 
     <!-- Header -->
@@ -72,11 +78,37 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <div class="font-medium text-gray-900 dark:text-gray-100 text-sm flex items-center gap-1.5">
+                                        <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">
                                             RemoteDigest
-                                            <span style="font-size:.65rem;background:#872323;color:#fff;padding:.1rem .4rem;border-radius:4px;font-weight:800;">NEW</span>
                                         </div>
                                         <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">20 offres remote / jour, personnalisées</div>
+                                    </div>
+                                </a>
+
+                                <a href="{{ route('tjm.index') }}" class="flex items-start space-x-3 px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <div class="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-content flex-shrink-0" style="background-color:#87232315;">
+                                        <svg class="w-4 h-4 mx-auto" style="color:#872323;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-gray-900 dark:text-gray-100 text-sm">Simulateur TJM</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Calcule ton tarif freelance idéal</div>
+                                    </div>
+                                </a>
+
+                                <a href="{{ route('linkedin.analyse') }}" class="flex items-start space-x-3 px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <div class="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-content flex-shrink-0" style="background-color:rgba(10,102,194,.08);">
+                                        <svg class="w-4 h-4 mx-auto" style="color:#0a66c2;" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-gray-900 dark:text-gray-100 text-sm flex items-center gap-1.5">
+                                            Analyse LinkedIn
+                                            <span style="font-size:.65rem;background:#0a66c2;color:#fff;padding:.1rem .4rem;border-radius:4px;font-weight:800;">IA</span>
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Score + recommandations IA</div>
                                     </div>
                                 </a>
                             </div>
@@ -96,7 +128,7 @@
                     </a>
                 </div>
 
-                <!-- Droite : Avis + Stats + Dark Toggle + Commencer -->
+                <!-- Droite : Avis + Stats + Docs + Dark Toggle + Commencer -->
                 <div class="flex items-center justify-start space-x-1 pl-8">
                     <a href="{{ route('avis.index') }}"
                        class="px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all font-medium text-sm">
@@ -105,6 +137,10 @@
                     <a href="{{ route('stats') }}"
                        class="px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all font-medium text-sm">
                         Stats
+                    </a>
+                    <a href="{{ route('docs') }}"
+                       class="px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all font-medium text-sm">
+                        Docs
                     </a>
 
                     <!-- Dark Mode Toggle -->
@@ -229,7 +265,7 @@
                         Suite d'outils gratuits pour aider les professionnels du remote à développer leur carrière du début jusqu'à l'expertise.
                     </p>
                     <div class="flex justify-center sm:justify-start">
-                        <a href="#"
+                        <a href="{{ route('don') }}"
                            class="inline-flex items-center space-x-2 px-5 py-2.5 bg-white rounded-lg font-semibold text-sm transition-all hover:bg-white/90 hover:scale-105 shadow-md"
                            style="color: #872323;">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -257,6 +293,9 @@
                     <h3 class="font-semibold text-white mb-4 text-sm uppercase tracking-wider">Administration</h3>
                     <ul class="space-y-2.5 text-sm">
                         <li>
+                            <a href="{{ route('docs') }}" class="text-white/70 hover:text-white transition-colors">Documentation</a>
+                        </li>
+                        <li>
                             <a href="{{ route('admin.login') }}" class="text-white/70 hover:text-white transition-colors inline-flex items-center space-x-1.5 justify-center sm:justify-start">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
@@ -265,7 +304,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="text-white/70 hover:text-white transition-colors inline-flex items-center space-x-1.5 justify-center sm:justify-start">
+                            <a href="{{ route('don') }}" class="text-white/70 hover:text-white transition-colors inline-flex items-center space-x-1.5 justify-center sm:justify-start">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                 </svg>
@@ -283,7 +322,7 @@
                 <p class="text-white/60 text-xs md:text-sm">&copy; {{ date('Y') }} Fidow. Tous droits réservés.</p>
                 <p class="flex items-center space-x-1.5 text-white/60 text-xs md:text-sm">
                     <span>Réalisé avec</span>
-                    <span>❤️</span>
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" style="color:rgba(255,255,255,.7)"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
                     <span>par</span>
                     <a href="https://roger.nealix.org" target="_blank" rel="noopener noreferrer"
                        class="text-white font-semibold hover:underline transition-all">
@@ -352,6 +391,34 @@
     </div>
 
     @stack('scripts')
+
+    <!-- Global: scroll-progress + data-reveal + page animations -->
+    <script>
+    // Scroll progress bar
+    (function() {
+        const bar = document.getElementById('scroll-progress');
+        if (!bar) return;
+        window.addEventListener('scroll', function() {
+            const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+            bar.style.transform = 'scaleX(' + Math.min(pct, 1) + ')';
+        }, { passive: true });
+    })();
+
+    // Intersection Observer for data-reveal
+    (function() {
+        const els = document.querySelectorAll('[data-reveal]');
+        if (!els.length) return;
+        const io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) {
+                    e.target.classList.add('is-visible');
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.08 });
+        els.forEach(function(el) { io.observe(el); });
+    })();
+    </script>
 
     <!-- Dark Mode Alpine Component -->
     <script>

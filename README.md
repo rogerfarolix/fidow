@@ -1,452 +1,299 @@
-# Fidow - Plateforme IA Multifonctionnelle
+# Fidow — Suite d'outils pour professionnels remote
 
 ![Laravel](https://img.shields.io/badge/Laravel-11.31-red?style=flat&logo=laravel)
 ![PHP](https://img.shields.io/badge/PHP-8.2+-blue?style=flat&logo=php)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat&logo=tailwindcss)
 ![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=flat&logo=vite)
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-compatible-336791?style=flat&logo=postgresql)
 
-Fidow est une plateforme web multifonctionnelle basée sur Laravel qui intègre plusieurs services intelligents : génération de positionnement professionnel, système d'avis clients, digest d'offres d'emploi, et administration dynamique de providers IA.
+> Gratuit · Sans inscription · Toujours disponible
+> 🌍 **[fidow.nealix.org](https://fidow.nealix.org)**
 
-## 🌟 Fonctionnalités Principales
-
-### 🎯 Générateur de Positionnement Professionnel
-- Création de textes de positionnement personnalisés via IA
-- Configuration multi-paramètres (métier, technologies, niveau, cible, etc.)
-- Support de plusieurs providers IA avec système de fallback automatique
-- Historique des générations et possibilité de retenir les phrases préférées
-
-### 📊 Système d'Avis Clients
-- Soumission d'avis avec validation et modération
-- Interface d'administration pour approuver/rejeter les avis
-- Système de throttling pour prévenir les abus
-- Affichage public des avis validés
-
-### 📧 Digest d'Offres d'Emploi
-- Abonnement personnalisé avec préférences (domaine, contrat, niveau, salaire)
-- Agrégation d'offres d'emploi avec déduplication automatique
-- Envoi automatisé de digests par email selon les fuseaux horaires
-- Interface de gestion des abonnés et des préférences
-
-### 🤖 Administration des Providers IA
-- Configuration dynamique de multiples providers IA (Groq, Mistral, Google AI, Cloudflare, Cerebras)
-- Système de priorité et fallback automatique
-- Monitoring des statistiques d'utilisation et taux de succès
-- Tests de connectivité et gestion des clés API
-
-### 📈 Tableaux de Bord et Statistiques
-- Interface d'administration complète avec dashboard
-- Statistiques d'utilisation en temps réel
-- Monitoring des performances des services IA
-- Export de données et rapports
-
-## 🏗️ Architecture Technique
-
-### Backend
-- **Framework**: Laravel 11.31
-- **PHP**: 8.2+
-- **Base de données**: MySQL/PostgreSQL (configurable)
-- **Queue System**: Laravel Queues pour les tâches asynchrones
-- **Cache**: Redis/File (configurable)
-
-### Frontend
-- **Build Tool**: Vite 6.0
-- **CSS Framework**: TailwindCSS 3.4
-- **JavaScript**: Vanilla JS avec Axios
-- **Styling**: Support Dark Mode avec patch automatique
-
-### Services Externes
-- **Providers IA**: Groq, Mistral, Google AI, Cloudflare Workers AI, Cerebras
-- **Email**: Laravel Mail (configurable)
-- **Monitoring**: Logs intégrés et statistiques
-
-## 📦 Dépendances
-
-### PHP (via Composer)
-```json
-{
-    "laravel/framework": "^11.31",
-    "laravel/tinker": "^2.9",
-    "laravel/pail": "^1.1",
-    "laravel/pint": "^1.13",
-    "laravel/sail": "^1.26"
-}
-```
-
-### Node.js (via NPM)
-```json
-{
-    "vite": "^6.0.11",
-    "laravel-vite-plugin": "^1.2.0",
-    "tailwindcss": "^3.4.13",
-    "autoprefixer": "^10.4.20",
-    "axios": "^1.7.4"
-}
-```
-
-## 🚀 Installation
-
-### Prérequis
-- PHP 8.2+
-- Composer
-- Node.js 18+
-- Base de données (MySQL/PostgreSQL/SQLite)
-
-### Étapes d'Installation
-
-1. **Cloner le repository**
-```bash
-git clone <repository-url>
-cd fidow
-```
-
-2. **Installer les dépendances**
-```bash
-composer install
-npm install
-```
-
-3. **Configuration de l'environnement**
-```bash
-cp .env.example .env
-php artisan key:generate
-```
-
-4. **Configurer la base de données**
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=fidow
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-5. **Configurer les services IA**
-```env
-# Groq
-GROQ_KEY=your_groq_api_key
-
-# Mistral
-MISTRAL_API_KEY=your_mistral_api_key
-
-# Google AI
-GOOGLE_AI_API_KEY=your_google_ai_api_key
-
-# Cloudflare
-CLOUDFLARE_API_KEY=your_cloudflare_api_key
-CLOUDFLARE_ACCOUNT_ID=your_account_id
-
-# Cerebras
-CEREBRAS_API_KEY=your_cerebras_api_key
-```
-
-6. **Exécuter les migrations**
-```bash
-php artisan migrate
-```
-
-7. **Lancer le serveur de développement**
-```bash
-npm run dev
-php artisan serve
-```
-
-## 📁 Structure du Projet
-
-```
-fidow/
-├── app/
-│   ├── Http/Controllers/          # Contrôleurs MVC
-│   ├── Models/                    # Modèles Eloquent
-│   ├── Services/                  # Services métier
-│   └── Jobs/                      # Tâches asynchrones
-├── database/
-│   ├── migrations/                # Migrations de base de données
-│   ├── seeders/                   # Données initiales
-│   └── factories/                 # Factories pour les tests
-├── resources/
-│   ├── views/                     # Templates Blade
-│   ├── css/                       # Styles TailwindCSS
-│   └── js/                        # JavaScript frontend
-├── routes/
-│   ├── web.php                    # Routes web
-│   └── console.php                # Commandes Artisan
-└── config/                        # Configuration Laravel
-```
-
-## 🔧 Configuration
-
-### Providers IA
-Les providers IA sont configurés via l'interface d'administration dans `/admin/llm`. Vous pouvez :
-
-- Ajouter/supprimer des providers
-- Définir l'ordre de priorité
-- Configurer les paramètres (temperature, max_tokens, timeout)
-- Activer/désactiver les providers
-- Définir un provider principal
-
-### Digest d'Emploi
-Configurez les domaines supportés et les préférences d'abonnement :
-
-- Domaines: dev, design, marketing, cyber, data, product, other
-- Types de contrat: full_time, part_time, freelance, contract
-- Niveaux: junior, mid, senior, expert
-- Pays et salaires minimums
-
-### Throttling et Limites
-- Génération de positionnement: 5 requêtes/minute
-- Soumission d'avis: 3 requêtes/minute
-- Abonnement digest: 5 requêtes/5 minutes
-
-## 📊 API Endpoints
-
-### Public
-- `GET /` - Page d'accueil
-- `GET /stats` - Statistiques publiques
-- `GET /positionnement` - Formulaire de positionnement
-- `POST /generer` - Génération de positionnement
-- `GET /avis` - Liste des avis
-- `POST /avis` - Soumission d'avis
-
-### Digest
-- `GET /remote-digest` - Page d'abonnement
-- `POST /remote-digest/subscribe` - Inscription
-- `GET /remote-digest/unsubscribe/{token}` - Désabonnement
-- `GET /remote-digest/preferences/{token}` - Préférences
-
-### Administration
-- `GET /admin/login` - Connexion admin
-- `GET /admin/dashboard` - Tableau de bord
-- `GET /admin/llm` - Gestion des providers IA
-- `GET /admin/avis` - Modération des avis
-- `GET /admin/data` - Données et statistiques
-
-## 🧪 Tests
-
-### Exécuter les tests
-```bash
-php artisan test
-```
-
-### Tests unitaires
-```bash
-vendor/bin/phpunit
-```
-
-### Code Style
-```bash
-vendor/bin/pint
-```
-
-## 📝 Scripts Utiles
-
-### Développement
-```bash
-# Lancer tous les services de développement
-composer run dev
-
-# Vider les caches
-php artisan cache:clear
-php artisan config:clear
-php artisan view:clear
-```
-
-### Dark Mode Patch
-Un script Python est disponible pour ajouter le support dark mode aux templates existants :
-```bash
-python patch_admin_dark_mode.py
-```
-
-## 🔒 Sécurité
-
-- Validation rigoureuse des entrées utilisateur
-- Protection CSRF activée
-- Throttling configurable
-- Hashage des mots de passe avec bcrypt
-- Validation des emails et tokens
-- Logs détaillés pour l'audit
-
-## 📈 Monitoring
-
-### Logs
-- Logs d'application via Laravel Log
-- Logs spécifiques pour les services IA
-- Monitoring des erreurs et performances
-
-### Statistiques
-- Taux de succès des providers IA
-- Nombre d'utilisations par service
-- Performance des temps de réponse
-- Historique des générations
-
-## 🌍 Guide de Déploiement VPS (Ubuntu 22.04 / 24.04)
-
-Ce guide détaille les étapes pas-à-pas pour déployer Fidow en production sur un VPS.
-
-### 1. Préparation du Serveur
-Mettez à jour le système et installez les dépendances requises (Nginx, PHP 8.2+, MySQL, Redis, Supervisor, Node.js, Python).
-
-```bash
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y nginx mysql-server redis-server supervisor git unzip curl
-sudo apt install -y php8.2-fpm php8.2-cli php8.2-mysql php8.2-xml php8.2-mbstring php8.2-curl php8.2-zip php8.2-redis
-```
-
-### 2. Installation de Node.js et Python (pour les scrapers)
-```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs python3-pip python3-venv
-```
-
-### 3. Configuration de la Base de Données
-Connectez-vous à MySQL et créez la base de données pour l'application :
-```bash
-sudo mysql
-```
-```sql
-CREATE DATABASE fidow;
-CREATE USER 'fidow'@'localhost' IDENTIFIED BY 'mot_de_passe_robuste';
-GRANT ALL PRIVILEGES ON fidow.* TO 'fidow'@'localhost';
-FLUSH PRIVILEGES;
-EXIT;
-```
-
-### 4. Déploiement du Code
-Clonez le dépôt dans le répertoire web approprié (ex: `/var/www/`) :
-```bash
-sudo mkdir -p /var/www/Projets/nealix
-cd /var/www/Projets/nealix
-sudo git clone <votre-url-git> fidow
-cd fidow
-```
-
-### 5. Installation des Dépendances et Configuration
-Donnez les droits nécessaires à votre utilisateur pour installer les paquets :
-```bash
-sudo chown -R $USER:www-data /var/www/Projets/nealix/fidow
-
-# Installation des dépendances PHP
-composer install --optimize-autoloader --no-dev
-
-# Installation et build des dépendances frontend
-npm install
-npm run build
-
-# Création du fichier d'environnement et clé d'application
-cp .env.example .env
-php artisan key:generate
-```
-Modifiez ensuite le fichier `.env` avec les informations de votre BDD et vos clés API (Groq, Mistral, etc.). N'oubliez pas de définir `APP_ENV=production` et `APP_DEBUG=false`.
-
-### 6. Configuration Python pour les Scrapers
-Si vous utilisez les scrapers (Indeed, LinkedIn) situés dans `python_scrapers` :
-```bash
-cd /var/www/Projets/nealix/fidow/python_scrapers
-python3 -m venv venv
-source venv/bin/activate
-pip install scrapling
-deactivate
-cd ..
-```
-
-### 7. Configuration des Permissions
-Assurez-vous que les répertoires `storage` et `bootstrap/cache` sont inscriptibles par Nginx :
-```bash
-sudo chown -R www-data:www-data /var/www/Projets/nealix/fidow/storage
-sudo chown -R www-data:www-data /var/www/Projets/nealix/fidow/bootstrap/cache
-sudo chmod -R 775 /var/www/Projets/nealix/fidow/storage
-sudo chmod -R 775 /var/www/Projets/nealix/fidow/bootstrap/cache
-```
-
-### 8. Configuration de Nginx
-Créez un fichier de configuration pour le site :
-```bash
-sudo nano /etc/nginx/sites-available/fidow
-```
-```nginx
-server {
-    listen 80;
-    server_name votre-domaine.com;
-    root /var/www/Projets/nealix/fidow/public;
-
-    add_header X-Frame-Options "SAMEORIGIN";
-    add_header X-Content-Type-Options "nosniff";
-
-    index index.php;
-    charset utf-8;
-
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-
-    location = /favicon.ico { access_log off; log_not_found off; }
-    location = /robots.txt  { access_log off; log_not_found off; }
-
-    error_page 404 /index.php;
-
-    location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
-
-    location ~ /\.(?!well-known).* {
-        deny all;
-    }
-}
-```
-Activez le site et redémarrez Nginx :
-```bash
-sudo ln -s /etc/nginx/sites-available/fidow /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl restart nginx
-```
-
-### 9. Configuration de Supervisor (Queue Worker)
-Fidow utilise un système de file d'attente pour traiter les tâches en arrière-plan. Copiez le fichier de configuration Supervisor fourni :
-```bash
-sudo cp fidow-worker.conf /etc/supervisor/conf.d/
-sudo supervisorctl reread
-sudo supervisorctl update
-sudo supervisorctl start fidow-queue-worker:*
-```
-
-### 10. Optimisations Finales et SSL
-Exécutez les migrations, mettez en cache les configurations et installez un certificat SSL gratuit :
-```bash
-# Migrations
-php artisan migrate --force
-
-# Caches de production
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
-# Certificat SSL avec Certbot
-sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d votre-domaine.com
-```
-
-## 🤝 Contribution
-
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/amazing-feature`)
-3. Commit les changements (`git commit -m 'Add amazing feature'`)
-4. Push vers la branche (`git push origin feature/amazing-feature`)
-5. Ouvrir une Pull Request
-
-## 📄 Licence
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
-## 🆘 Support
-
-Pour toute question ou support technique :
-
-- Créer une issue sur le repository GitHub
-- Consulter la documentation Laravel officielle
-- Vérifier les logs dans `storage/logs/laravel.log`
+Fidow est une plateforme web open-source qui regroupe une suite d'outils pratiques pour les professionnels du travail à distance : générateur de positionnement IA, digest d'offres remote personnalisé, système d'avis, et tableau de bord d'administration complet.
 
 ---
 
-**Développé avec ❤️ par [Votre Nom]**
+## Fonctionnalités
+
+### Générateur de Positionnement Professionnel
+
+- Génère une phrase d'accroche professionnelle personnalisée via IA
+- Paramètres : métier, technologies, niveau, cible, spécialisation, ton
+- Support multi-providers IA avec **fallback automatique** (Groq → Mistral → Google AI → Cloudflare → Cerebras)
+- Historique des générations, possibilité de retenir les phrases favorites
+- Rate limit : 5 req/min par IP
+
+### RemoteDigest — Digest d'offres remote
+
+- Agrégation depuis **+18 sources** : Remotive, RemoteOK, WorkingNomads, WeWorkRemotely, Jobicy, LinkedIn, Indeed, Wellfound, FlexJobs, MissionFreelance, 404Works, Jobbers, Freenest…
+- **Intégration RapidAPI** : Real-Time LinkedIn Scraper, LI Data Scraper, Real-Time Web Search (Greenhouse/Lever/Ashby)
+- Déduplication automatique par fingerprint MD5 (titre + société + URL)
+- Abonnement personnalisé : domaine, type de contrat, niveau, salaire min
+- Envoi quotidien par email, digest HTML complet avec tracking de clics
+- Enrichissement salarial via Job Salary Data (Glassdoor) — commande dédiée
+
+### Système d'Avis
+
+- Soumission d'avis avec validation anti-spam (throttle : 3 req/min)
+- Modération admin : approbation / rejet
+- Affichage public des avis validés
+
+### Administration
+
+- Dashboard avec statistiques en temps réel
+- Gestion dynamique des providers LLM (priorité, activation, test de connectivité)
+- Monitoring par provider : taux de succès, nombre d'appels, dernière utilisation
+- Gestion des abonnés RemoteDigest et des job listings scrapés
+
+---
+
+## Stack technique
+
+| Couche | Technologie |
+| ------ | ----------- |
+| Framework | Laravel 11.31 |
+| PHP | 8.2+ |
+| Base de données | PostgreSQL (MySQL compatible) |
+| Queue | Laravel Queues (database driver) |
+| CSS | TailwindCSS 3.4 + animations CSS custom |
+| JS | Alpine.js 3, Axios |
+| Build | Vite 6 |
+| Scraping headless | Python 3.10 + Scrapling + Playwright |
+| Email | Laravel Mail (SMTP configurable) |
+| Providers LLM | Groq, Mistral, Google AI, Cloudflare Workers AI, Cerebras |
+
+---
+
+## Installation
+
+### Prérequis
+
+- PHP 8.2+, Composer
+- Node.js 18+
+- PostgreSQL ou MySQL
+- Python 3.10+ (pour le scraper headless — optionnel)
+
+### 1. Cloner et installer
+
+```bash
+git clone https://github.com/rogerfarolx/fidow.git
+cd fidow
+
+composer install
+npm install && npm run build
+
+cp .env.example .env
+php artisan key:generate
+```
+
+### 2. Base de données
+
+```bash
+# Configurer .env (DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD)
+php artisan migrate
+php artisan db:seed --class=AdminSeeder
+php artisan db:seed --class=LlmConfigurationSeeder
+```
+
+### 3. Python — scraper headless (optionnel)
+
+Requis uniquement pour les sources LinkedIn, Indeed, Wellfound et consorts :
+
+```bash
+cd python_scrapers
+python3 -m venv venv
+source venv/bin/activate
+pip install scrapling playwright
+playwright install chromium
+cd ..
+```
+
+### 4. Lancer en développement
+
+```bash
+php artisan serve
+php artisan queue:work   # dans un autre terminal
+```
+
+---
+
+## Variables d'environnement
+
+```env
+# Application
+APP_URL=https://fidow.nealix.org
+APP_LOCALE=fr
+
+# Base de données
+DB_CONNECTION=pgsql
+DB_DATABASE=fidow_nealix_bd
+
+# Queue
+QUEUE_CONNECTION=database
+
+# Providers LLM (au moins un requis pour le positionnement)
+GROQ_API_KEY=gsk_...
+MISTRAL_API_KEY=...
+GOOGLE_AI_API_KEY=...
+CLOUDFLARE_API_KEY=...
+CLOUDFLARE_ACCOUNT_ID=...
+CEREBRAS_API_KEY=...
+
+# RapidAPI — une seule clé pour toutes les APIs souscrites
+# → https://rapidapi.com/developer/apps
+RAPIDAPI_KEY=...
+RAPIDAPI_LINKEDIN_KEYWORDS="remote developer,remote designer,remote data scientist,remote marketing,remote product manager,remote devops"
+RAPIDAPI_WEBSEARCH_QUERIES="remote developer engineer jobs site:greenhouse.io OR site:lever.co|remote designer ux ui jobs site:greenhouse.io OR site:lever.co"
+
+# Scraping proxies (optionnel)
+SCRAPING_PROXIES=ip:port,ip:port
+```
+
+---
+
+## Commandes Artisan
+
+```bash
+# Scraping — dispatche chaque source en queue
+php artisan digest:scrape
+php artisan digest:scrape --source=linkedin_api   # source unique
+
+# Envoi des digests email du jour
+php artisan digest:send
+
+# Purge des offres expirées (> 14 jours)
+php artisan digest:purge
+
+# Enrichissement salarial via Glassdoor (RapidAPI)
+php artisan digest:enrich-salary --limit=50
+```
+
+---
+
+## Tâches planifiées (Cron)
+
+Ajouter au crontab :
+
+```cron
+* * * * * cd /var/www/fidow && php artisan schedule:run >> /dev/null 2>&1
+```
+
+| Tâche | Fréquence |
+| ----- | --------- |
+| `digest:scrape` | Toutes les 6 heures |
+| `digest:send` | Chaque jour (heure configurable) |
+| `digest:purge` | Chaque nuit à 3h00 |
+
+---
+
+## Sources d'offres
+
+| Source | Type | Coût |
+| ------ | ---- | ---- |
+| Remotive | API JSON | Gratuit |
+| RemoteOK | API JSON | Gratuit |
+| WorkingNomads | API JSON | Gratuit |
+| WeWorkRemotely | RSS | Gratuit |
+| Jobicy | RSS | Gratuit |
+| Jobspresso | RSS | Gratuit |
+| LinkedIn, Indeed, Wellfound, FlexJobs | Python/Scrapling | Gratuit (anti-bot) |
+| MissionFreelance, 404Works, Jobbers, Freenest | Python/Scrapling | Gratuit |
+| **LinkedIn API** (RapidAPI) | API REST | ~100 req/mois gratuit |
+| **LI Data Scraper** (RapidAPI) | API REST | Plan gratuit |
+| **WebSearch ATS** – Greenhouse/Lever/Ashby | API REST | ~100 req/mois gratuit |
+
+---
+
+## Structure du projet
+
+```text
+fidow/
+├── app/
+│   ├── Console/Commands/
+│   │   ├── ScrapeJobsCommand.php          # digest:scrape
+│   │   ├── SendDailyDigestCommand.php     # digest:send
+│   │   ├── PurgeOldJobsCommand.php        # digest:purge
+│   │   └── EnrichJobSalaryCommand.php     # digest:enrich-salary
+│   ├── Http/Controllers/
+│   ├── Jobs/
+│   │   ├── ScrapeSourceJob.php            # Job queue par source (3 retries)
+│   │   └── SendDigestEmailJob.php
+│   ├── Models/
+│   │   ├── JobListing.php                 # fingerprint, scopes, accessors
+│   │   ├── DigestSubscriber.php
+│   │   ├── LlmConfiguration.php
+│   │   └── PositioningGeneration.php
+│   └── Services/
+│       ├── MultiSourceScraperService.php  # Scraping + RapidAPI + enrichissement
+│       └── DynamicAIService.php           # Sélection et fallback LLM
+├── python_scrapers/
+│   └── main.py                            # Scrapling headless (LinkedIn, Indeed…)
+├── resources/views/
+│   ├── accueil/                           # Page d'accueil animée
+│   ├── positionnement/                    # Générateur IA
+│   ├── digest/                            # RemoteDigest abonnement
+│   ├── avis/                              # Avis clients
+│   ├── docs/                              # Documentation
+│   ├── don/                               # Page de soutien / donation
+│   └── admin/                             # Dashboard + gestion LLM
+└── routes/web.php
+```
+
+---
+
+## Déploiement VPS
+
+### Optimisations production
+
+```bash
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan optimize
+```
+
+### Supervisor (queue worker)
+
+```ini
+[program:fidow-worker]
+command=php /var/www/fidow/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+autostart=true
+autorestart=true
+numprocs=2
+stdout_logfile=/var/log/fidow-worker.log
+```
+
+---
+
+## Contribuer
+
+1. Fork le repo
+2. Crée une branche : `git checkout -b feat/ma-fonctionnalite`
+3. Commit : `git commit -m 'feat: description'`
+4. Push : `git push origin feat/ma-fonctionnalite`
+5. Ouvre une Pull Request
+
+---
+
+## Soutenir le projet
+
+Fidow est entièrement gratuit et sans publicité. Si le projet t'a été utile :
+
+- [Ko-fi](https://ko-fi.com/rogergnanih) — don unique ou mensuel
+- [PayPal](https://paypal.me/rogergnanih)
+- [GitHub Sponsors](https://github.com/sponsors/rogerfarolx)
+
+Voir aussi la [page de don](https://fidow.nealix.org/don) sur la plateforme.
+
+---
+
+## Auteur
+
+**Roger Gnanih** — [roger.nealix.org](https://roger.nealix.org) · [professionnelroger@gmail.com](mailto:professionnelroger@gmail.com)
+
+---
+
+## Licence
+
+MIT — libre d'utilisation, modification et distribution.
