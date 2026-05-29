@@ -5,9 +5,7 @@ namespace App\Services;
 use App\Models\JobListing;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Carbon;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Scrape multi-sources des offres d'emploi remote.
@@ -34,26 +32,31 @@ class MultiSourceScraperService
         $results = ['scraped' => 0, 'skipped' => 0, 'errors' => []];
 
         $sources = [
-            // ── Sources JSON (API publiques) ──────────────────────────────
-            'remotive'       => fn() => $this->fetchRemotive(),
-            'workingnomads'  => fn() => $this->fetchWorkingNomads(),
-            'remoteok'       => fn() => $this->fetchRemoteOk(),
+            // ── Sources JSON / API publiques gratuites ────────────────────
+            'remotive'        => fn() => $this->fetchRemotive(),
+            'workingnomads'   => fn() => $this->fetchWorkingNomads(),
+            'remoteok'        => fn() => $this->fetchRemoteOk(),
 
             // ── Sources RSS ───────────────────────────────────────────────
-            'weworkremotely' => fn() => $this->fetchWWR(),
-            'jobicy'         => fn() => $this->fetchRSS('https://jobicy.com/?feed=job_feed', 'jobicy'),
-            'jobspresso'     => fn() => $this->fetchRSS('https://jobspresso.co/feed/', 'jobspresso'),
+            'weworkremotely'  => fn() => $this->fetchWWR(),
+            'jobicy'          => fn() => $this->fetchRSS('https://jobicy.com/?feed=job_feed', 'jobicy'),
+            'jobspresso'      => fn() => $this->fetchRSS('https://jobspresso.co/feed/', 'jobspresso'),
 
             // ── Sources Python (Scrapling / Anti-bot bypass) ──────────────
-            'indeed'         => fn() => $this->fetchViaPython('indeed'),
-            'linkedin'       => fn() => $this->fetchViaPython('linkedin'),
-            'justremote'     => fn() => $this->fetchViaPython('justremote'),
-            'wellfound'      => fn() => $this->fetchViaPython('wellfound'),
-            'flexjobs'       => fn() => $this->fetchViaPython('flexjobs'),
+            'indeed'          => fn() => $this->fetchViaPython('indeed'),
+            'linkedin'        => fn() => $this->fetchViaPython('linkedin'),
+            'justremote'      => fn() => $this->fetchViaPython('justremote'),
+            'wellfound'       => fn() => $this->fetchViaPython('wellfound'),
+            'flexjobs'        => fn() => $this->fetchViaPython('flexjobs'),
             'missionfreelance'=> fn() => $this->fetchViaPython('missionfreelance'),
-            '404works'       => fn() => $this->fetchViaPython('404works'),
-            'jobbers'        => fn() => $this->fetchViaPython('jobbers'),
-            'freenest'       => fn() => $this->fetchViaPython('freenest'),
+            '404works'        => fn() => $this->fetchViaPython('404works'),
+            'jobbers'         => fn() => $this->fetchViaPython('jobbers'),
+            'freenest'        => fn() => $this->fetchViaPython('freenest'),
+
+            // ── RapidAPI (plans gratuits) ─────────────────────────────────
+            'linkedin_api'    => fn() => $this->fetchLinkedInRapidApi(),
+            'li_scraper'      => fn() => $this->fetchLiDataScraper(),
+            'websearch_ats'   => fn() => $this->fetchWebSearchJobs(),
         ];
 
         foreach ($sources as $source => $fetcher) {
@@ -85,21 +88,24 @@ class MultiSourceScraperService
     public function scrapeSingleSource(string $sourceName): void
     {
         $sources = [
-            'remotive'       => fn() => $this->fetchRemotive(),
-            'workingnomads'  => fn() => $this->fetchWorkingNomads(),
-            'remoteok'       => fn() => $this->fetchRemoteOk(),
-            'weworkremotely' => fn() => $this->fetchWWR(),
-            'jobicy'         => fn() => $this->fetchRSS('https://jobicy.com/?feed=job_feed', 'jobicy'),
-            'jobspresso'     => fn() => $this->fetchRSS('https://jobspresso.co/feed/', 'jobspresso'),
-            'indeed'         => fn() => $this->fetchViaPython('indeed'),
-            'linkedin'       => fn() => $this->fetchViaPython('linkedin'),
-            'justremote'     => fn() => $this->fetchViaPython('justremote'),
-            'wellfound'      => fn() => $this->fetchViaPython('wellfound'),
-            'flexjobs'       => fn() => $this->fetchViaPython('flexjobs'),
+            'remotive'        => fn() => $this->fetchRemotive(),
+            'workingnomads'   => fn() => $this->fetchWorkingNomads(),
+            'remoteok'        => fn() => $this->fetchRemoteOk(),
+            'weworkremotely'  => fn() => $this->fetchWWR(),
+            'jobicy'          => fn() => $this->fetchRSS('https://jobicy.com/?feed=job_feed', 'jobicy'),
+            'jobspresso'      => fn() => $this->fetchRSS('https://jobspresso.co/feed/', 'jobspresso'),
+            'indeed'          => fn() => $this->fetchViaPython('indeed'),
+            'linkedin'        => fn() => $this->fetchViaPython('linkedin'),
+            'justremote'      => fn() => $this->fetchViaPython('justremote'),
+            'wellfound'       => fn() => $this->fetchViaPython('wellfound'),
+            'flexjobs'        => fn() => $this->fetchViaPython('flexjobs'),
             'missionfreelance'=> fn() => $this->fetchViaPython('missionfreelance'),
-            '404works'       => fn() => $this->fetchViaPython('404works'),
-            'jobbers'        => fn() => $this->fetchViaPython('jobbers'),
-            'freenest'       => fn() => $this->fetchViaPython('freenest'),
+            '404works'        => fn() => $this->fetchViaPython('404works'),
+            'jobbers'         => fn() => $this->fetchViaPython('jobbers'),
+            'freenest'        => fn() => $this->fetchViaPython('freenest'),
+            'linkedin_api'    => fn() => $this->fetchLinkedInRapidApi(),
+            'li_scraper'      => fn() => $this->fetchLiDataScraper(),
+            'websearch_ats'   => fn() => $this->fetchWebSearchJobs(),
         ];
 
         if (!isset($sources[$sourceName])) {
@@ -133,8 +139,8 @@ class MultiSourceScraperService
         );
 
         // Upsert silencieux : si doublon, on ignore
-        $exists = JobListing::where('fingerprint', $fingerprint)->exists()
-               || JobListing::where('url', $job['url'])->exists();
+        $exists = JobListing::query()->where('fingerprint', $fingerprint)->exists()
+               || JobListing::query()->where('url', $job['url'])->exists();
 
         if ($exists) {
             return false;
@@ -195,7 +201,6 @@ class MultiSourceScraperService
             Log::warning("[DigestScraper] Erreur fetchRemoteOk: " . $e->getMessage());
         }
         return $jobs;
-    }
     }
 
     /**
@@ -445,5 +450,306 @@ class MultiSourceScraperService
             str_contains($type, 'intern') => 'internship',
             default => 'full_time',
         };
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // RAPIDAPI — Sources premium (plans gratuits disponibles)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Client HTTP centralisé pour toutes les APIs RapidAPI.
+     * Retourne null si la clé n'est pas configurée.
+     */
+    private function rapidApiGet(string $host, string $path, array $params = []): ?\Illuminate\Http\Client\Response
+    {
+        $key = config('services.rapidapi.key');
+        if (!$key) {
+            return null;
+        }
+
+        try {
+            return Http::timeout(30)
+                ->withHeaders([
+                    'x-rapidapi-key'  => $key,
+                    'x-rapidapi-host' => $host,
+                ])
+                ->get("https://{$host}{$path}", $params);
+        } catch (\Exception $e) {
+            Log::warning("[DigestScraper] RapidAPI ({$host}{$path}): " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * LinkedIn — Real-Time LinkedIn Scraper API (RockApis)
+     * Host: linkedin-data-api.p.rapidapi.com
+     * Plan gratuit : ~100 req/mois
+     * Recherche par mots-clés configurables via RAPIDAPI_LINKEDIN_KEYWORDS.
+     */
+    private function fetchLinkedInRapidApi(): array
+    {
+        $keywordsRaw = config('services.rapidapi.linkedin_keywords', '');
+        $keywords = array_filter(array_map('trim', explode(',', $keywordsRaw)));
+
+        if (empty($keywords)) {
+            return [];
+        }
+
+        $allJobs = [];
+
+        foreach ($keywords as $keyword) {
+            $response = $this->rapidApiGet(
+                'linkedin-data-api.p.rapidapi.com',
+                '/search-jobs',
+                [
+                    'keywords'   => $keyword,
+                    'locationId' => '92000000', // Worldwide
+                    'datePosted' => 'pastWeek',
+                ]
+            );
+
+            if (!$response || !$response->successful()) {
+                Log::warning("[DigestScraper] linkedin_api: réponse vide pour «{$keyword}»");
+                usleep(400000);
+                continue;
+            }
+
+            foreach ($response->json('data', []) as $item) {
+                $company = is_array($item['company'] ?? null)
+                    ? ($item['company']['name'] ?? '')
+                    : ($item['company'] ?? '');
+
+                $salary  = is_array($item['salary'] ?? null) ? $item['salary'] : null;
+
+                $url = $item['url'] ?? '';
+                if (empty($url) || empty($item['title'] ?? '')) {
+                    continue;
+                }
+
+                $allJobs[] = [
+                    'source'        => 'linkedin_api',
+                    'title'         => $item['title'],
+                    'company'       => $company,
+                    'url'           => $url,
+                    'description'   => strip_tags($item['description'] ?? ''),
+                    'tags'          => $this->extractTagsFromText(($item['title'] ?? '') . ' ' . ($item['description'] ?? '')),
+                    'country'       => $item['location'] ?? 'Worldwide',
+                    'contract_type' => $this->normalizeContractType($item['type'] ?? $item['employmentType'] ?? ''),
+                    'salary_min'    => $salary['min'] ?? $salary['salaryMin'] ?? null,
+                    'salary_max'    => $salary['max'] ?? $salary['salaryMax'] ?? null,
+                ];
+            }
+
+            usleep(400000); // 400 ms entre chaque appel — respecter le rate limit
+        }
+
+        return $allJobs;
+    }
+
+    /**
+     * LI Data Scraper (LiScraper)
+     * Host: li-data-scraper.p.rapidapi.com
+     * Plan gratuit disponible — très rapide (91 ms)
+     * Complément de linkedin_api pour une couverture maximale.
+     */
+    private function fetchLiDataScraper(): array
+    {
+        $response = $this->rapidApiGet(
+            'li-data-scraper.p.rapidapi.com',
+            '/search-jobs',
+            [
+                'keywords' => 'remote developer engineer designer',
+                'location' => 'Worldwide',
+            ]
+        );
+
+        if (!$response || !$response->successful()) {
+            return [];
+        }
+
+        // L'API peut retourner { jobs: [...] } ou { data: [...] } selon la version
+        $items = $response->json('jobs', $response->json('data', []));
+        $jobs  = [];
+
+        foreach ($items as $item) {
+            $url   = $item['jobUrl'] ?? $item['url'] ?? '';
+            $title = $item['title'] ?? '';
+            if (!$url || !$title) {
+                continue;
+            }
+
+            $jobs[] = [
+                'source'        => 'li_scraper',
+                'title'         => $title,
+                'company'       => $item['companyName'] ?? $item['company'] ?? '',
+                'url'           => $url,
+                'description'   => strip_tags($item['description'] ?? ''),
+                'tags'          => $this->extractTagsFromText($title . ' ' . ($item['description'] ?? '')),
+                'country'       => $item['location'] ?? 'Worldwide',
+                'contract_type' => $this->normalizeContractType($item['contractType'] ?? $item['type'] ?? ''),
+                'salary_min'    => null,
+                'salary_max'    => null,
+            ];
+        }
+
+        return $jobs;
+    }
+
+    /**
+     * Real-Time Web Search → offres sur les ATS (Greenhouse, Lever, Ashby, Workday)
+     * Host: real-time-web-search.p.rapidapi.com
+     * Plan gratuit : ~100 req/mois
+     *
+     * Stratégie : chercher directement sur Google les jobs publiés sur les ATS
+     * des startups/scale-ups (Greenhouse, Lever, Ashby) — couvre des milliers
+     * d'entreprises qu'aucun autre scraper n'atteint.
+     */
+    private function fetchWebSearchJobs(): array
+    {
+        $queriesRaw = config('services.rapidapi.websearch_queries', '');
+        $queries    = array_filter(array_map('trim', explode('|', $queriesRaw)));
+
+        if (empty($queries)) {
+            return [];
+        }
+
+        $allJobs = [];
+
+        foreach ($queries as $query) {
+            $response = $this->rapidApiGet(
+                'real-time-web-search.p.rapidapi.com',
+                '/search',
+                ['q' => $query, 'limit' => 20]
+            );
+
+            if (!$response || !$response->successful()) {
+                usleep(400000);
+                continue;
+            }
+
+            foreach ($response->json('data', []) as $item) {
+                $url   = $item['url'] ?? '';
+                $title = $item['title'] ?? '';
+
+                if (!$url || !$title || !$this->looksLikeAtsJobUrl($url)) {
+                    continue;
+                }
+
+                $allJobs[] = [
+                    'source'        => 'websearch_ats',
+                    'title'         => $this->cleanWebJobTitle($title),
+                    'company'       => $this->extractCompanyFromAtsUrl($url),
+                    'url'           => $url,
+                    'description'   => $item['description'] ?? '',
+                    'tags'          => $this->extractTagsFromText($title . ' ' . ($item['description'] ?? '')),
+                    'country'       => 'Worldwide',
+                    'contract_type' => 'full_time',
+                    'salary_min'    => null,
+                    'salary_max'    => null,
+                ];
+            }
+
+            usleep(400000);
+        }
+
+        return $allJobs;
+    }
+
+    /**
+     * Enrichit un JobListing existant avec les données salariales Glassdoor
+     * via Job Salary Data (OpenWeb Ninja).
+     * Host: job-salary-data.p.rapidapi.com
+     * Appelé par EnrichJobSalaryCommand, pas par scrapeAll().
+     */
+    public function enrichWithSalary(\App\Models\JobListing $job): bool
+    {
+        $response = $this->rapidApiGet(
+            'job-salary-data.p.rapidapi.com',
+            '/',
+            [
+                'job_title' => $job->title,
+                'location'  => $job->country && $job->country !== 'Worldwide' ? $job->country : 'United States',
+                'radius'    => '200',
+            ]
+        );
+
+        if (!$response || !$response->successful()) {
+            return false;
+        }
+
+        $salaries = $response->json('salaries', []);
+        if (empty($salaries)) {
+            return false;
+        }
+
+        $first = $salaries[0];
+        $min   = $first['salary_percentile_25'] ?? $first['min_salary'] ?? null;
+        $max   = $first['salary_percentile_75'] ?? $first['max_salary'] ?? null;
+
+        if (!$min && !$max) {
+            return false;
+        }
+
+        $job->update(['salary_min' => $min, 'salary_max' => $max]);
+        return true;
+    }
+
+    // ── Helpers web search ────────────────────────────────────────────────────
+
+    /**
+     * Vérifie qu'une URL ressemble à une offre d'emploi sur un ATS connu.
+     */
+    private function looksLikeAtsJobUrl(string $url): bool
+    {
+        $atsPatterns = [
+            'greenhouse.io',
+            'lever.co',
+            'jobs.ashbyhq.com',
+            'apply.workable.com',
+            'boards.eu.greenhouse.io',
+        ];
+
+        foreach ($atsPatterns as $pattern) {
+            if (str_contains($url, $pattern)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Nettoie un titre de job venant d'un résultat Google (retire le suffixe " | Greenhouse" etc.).
+     */
+    private function cleanWebJobTitle(string $title): string
+    {
+        // Retire "| Greenhouse", "- Lever", "at Company" en fin de titre
+        $title = preg_replace('/\s*[\|\-–]\s*(greenhouse|lever|ashby|workable|workday|jobs|careers).*$/i', '', $title);
+        return trim($title);
+    }
+
+    /**
+     * Extrait le nom de la société depuis une URL ATS.
+     */
+    private function extractCompanyFromAtsUrl(string $url): string
+    {
+        // boards.greenhouse.io/companyslug/jobs/123
+        if (preg_match('#greenhouse\.io/([^/?#]+)#i', $url, $m)) {
+            return ucwords(str_replace(['-', '_'], ' ', $m[1]));
+        }
+        // jobs.lever.co/companyslug/uuid
+        if (preg_match('#lever\.co/([^/?#]+)#i', $url, $m)) {
+            return ucwords(str_replace(['-', '_'], ' ', $m[1]));
+        }
+        // jobs.ashbyhq.com/companyslug/uuid
+        if (preg_match('#ashbyhq\.com/([^/?#]+)#i', $url, $m)) {
+            return ucwords(str_replace(['-', '_'], ' ', $m[1]));
+        }
+        // apply.workable.com/companyslug/j/uuid
+        if (preg_match('#workable\.com/([^/?#]+)/j/#i', $url, $m)) {
+            return ucwords(str_replace(['-', '_'], ' ', $m[1]));
+        }
+
+        return 'Unknown';
     }
 }

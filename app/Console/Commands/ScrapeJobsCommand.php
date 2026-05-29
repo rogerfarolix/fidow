@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\MultiSourceScraperService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class ScrapeJobsCommand extends Command
 {
@@ -16,21 +14,28 @@ class ScrapeJobsCommand extends Command
         $this->info('🔍 Démarrage de la mise en file d\'attente du scraping multi-sources...');
 
         $sources = [
+            // API publiques gratuites
             'remotive',
             'workingnomads',
+            'remoteok',
+            // RSS
             'weworkremotely',
             'jobicy',
             'jobspresso',
+            // Python / headless (anti-bot)
             'indeed',
             'linkedin',
-            'remoteok',
             'justremote',
             'wellfound',
             'flexjobs',
             'missionfreelance',
             '404works',
             'jobbers',
-            'freenest'
+            'freenest',
+            // RapidAPI (plans gratuits — nécessite RAPIDAPI_KEY)
+            'linkedin_api',
+            'li_scraper',
+            'websearch_ats',
         ];
 
         $specificSource = $this->option('source');

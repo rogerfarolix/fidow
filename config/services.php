@@ -50,4 +50,19 @@ return [
     'cerebras' => [
         'api_key' => env('CEREBRAS_API_KEY'),
     ],
+
+    // RapidAPI — clé unique valable pour toutes les APIs souscrites
+    'rapidapi' => [
+        'key' => env('RAPIDAPI_KEY'),
+        // Mots-clés LinkedIn (séparés par virgule). Chaque terme = 1 requête API.
+        'linkedin_keywords' => env(
+            'RAPIDAPI_LINKEDIN_KEYWORDS',
+            'remote developer,remote designer,remote data scientist,remote marketing,remote product manager,remote devops'
+        ),
+        // Requêtes Google Jobs (séparées par |)
+        'websearch_queries' => env(
+            'RAPIDAPI_WEBSEARCH_QUERIES',
+            'remote developer engineer jobs site:greenhouse.io OR site:lever.co OR site:jobs.ashbyhq.com|remote designer ux ui jobs site:greenhouse.io OR site:lever.co|remote data scientist machine learning jobs site:greenhouse.io OR site:lever.co|remote marketing seo growth jobs site:greenhouse.io OR site:lever.co'
+        ),
+    ],
 ];
