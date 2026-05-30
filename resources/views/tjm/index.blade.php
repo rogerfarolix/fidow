@@ -9,9 +9,8 @@
 .tjm-hero {
     position:relative; overflow:hidden;
     padding:6rem 1.5rem 4rem; text-align:center;
-    background:linear-gradient(160deg,#fef7f7 0%,#fff 60%,#fef2f2 100%);
+    background: transparent;
 }
-html.dark .tjm-hero { background:linear-gradient(160deg,#0f0608 0%,#0c0c0f 60%,#130a0a 100%); }
 
 .tjm-hero__eyebrow {
     display:inline-flex; align-items:center; gap:.4rem;
@@ -54,12 +53,14 @@ html.dark .tjm-hero__sub { color:#9ca3af; }
 
 /* ── PANEL COMMUN ── */
 .tjm-panel {
-    background:#fff; border-radius:24px;
-    border:1.5px solid rgba(0,0,0,.07);
-    box-shadow:0 4px 24px rgba(0,0,0,.06);
+    background: rgba(22,22,25,.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius:24px;
+    border:1.5px solid rgba(255,255,255,.08);
+    box-shadow:0 4px 24px rgba(0,0,0,.5);
     overflow:hidden;
 }
-html.dark .tjm-panel { background:#161619; border-color:rgba(255,255,255,.08); box-shadow:0 4px 24px rgba(0,0,0,.4); }
 
 .tjm-panel__head {
     padding:1.5rem 1.75rem 1.25rem;

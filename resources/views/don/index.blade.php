@@ -12,6 +12,7 @@
     text-align: center;
     position: relative;
     overflow: hidden;
+    background: transparent;
 }
 .don-heart {
     display: inline-flex; align-items: center; justify-content: center;
@@ -83,21 +84,15 @@ html.dark .don-amount:hover, html.dark .don-amount.active {
 .don-method {
     display: flex; flex-direction: column; align-items: center; gap: .85rem;
     padding: 2rem 1.5rem; border-radius: 20px;
-    background: #fff; border: 1.5px solid rgba(0,0,0,.07);
+    background: rgba(22,22,25,.88);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255,255,255,.08);
     text-decoration: none; transition: all .25s;
-    box-shadow: 0 4px 20px rgba(0,0,0,.05);
-}
-html.dark .don-method {
-    background: #161619; border-color: rgba(255,255,255,.08);
-    box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    box-shadow: 0 4px 20px rgba(0,0,0,.5);
 }
 .don-method:hover {
     transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(135,35,35,.15);
-    border-color: rgba(135,35,35,.3);
-}
-html.dark .don-method:hover {
-    box-shadow: 0 16px 40px rgba(135,35,35,.3);
+    box-shadow: 0 16px 40px rgba(135,35,35,.35);
     border-color: rgba(135,35,35,.4);
 }
 .don-method__icon {
@@ -115,12 +110,11 @@ html.dark .don-method__name { color: #f3f4f6; }
 
 /* ── IMPACT ── */
 .don-impact {
-    background: #fff; border: 1.5px solid rgba(0,0,0,.07);
+    background: rgba(22,22,25,.88);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255,255,255,.08);
     border-radius: 24px; padding: 2.5rem; margin-bottom: 3rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,.05);
-}
-html.dark .don-impact {
-    background: #161619; border-color: rgba(255,255,255,.08);
+    box-shadow: 0 4px 20px rgba(0,0,0,.5);
 }
 .don-impact__title {
     font-family: 'Space Grotesk', sans-serif;

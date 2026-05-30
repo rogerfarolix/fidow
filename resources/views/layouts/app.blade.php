@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth" x-data="themeApp()" :class="{ 'dark': darkMode }">
+<html lang="fr" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,20 +21,14 @@
     
     @stack('styles')
 </head>
-<body class="font-['Inter'] antialiased bg-gray-50 dark:bg-[#0c0c0f] text-gray-900 dark:text-gray-100" x-data="{ mobileMenu: false }">
+<body class="font-['Inter'] antialiased bg-[#0a0a0d] text-gray-100" x-data="{ mobileMenu: false }">
     
     <!-- Scroll progress bar -->
     <div id="scroll-progress" role="progressbar" aria-hidden="true"></div>
 
-    <!-- Animated background — orbs flottants + grille -->
-    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div class="absolute inset-0 bg-[#fef7f7] dark:bg-[#0a0a0d]"></div>
-        <div class="fidow-orb fidow-orb--1"></div>
-        <div class="fidow-orb fidow-orb--2"></div>
-        <div class="fidow-orb fidow-orb--3"></div>
-        <div class="fidow-orb fidow-orb--4"></div>
-        <div class="fidow-grid"></div>
-    </div>
+    <!-- Canvas background animé — spirales · géométrie · réseau · binaire -->
+    <canvas id="fidow-bg" aria-hidden="true"
+            style="position:fixed;inset:0;width:100%;height:100%;z-index:-10;pointer-events:none;display:block;"></canvas>
 
     <!-- Header -->
     <header class="sticky top-0 z-50 bg-[#872323]/95 backdrop-blur-md border-b border-white/10 shadow-lg">
@@ -143,31 +137,6 @@
                         Docs
                     </a>
 
-                    <!-- Dark Mode Toggle -->
-                    <button
-                        @click="toggleDark()"
-                        class="p-2 rounded-lg hover:bg-white/10 transition-all text-white/80 hover:text-white"
-                        :title="darkMode ? 'Passer en mode clair' : 'Passer en mode sombre'"
-                        aria-label="Toggle dark mode"
-                    >
-                        <!-- Sun icon (shown in dark mode) -->
-                        <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                        </svg>
-                        <!-- Moon icon (shown in light mode) -->
-                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
-                    </button>
-
                     <a href="#commencer"
                        class="ml-2 px-5 py-2 text-[#872323] bg-white rounded-lg font-semibold text-sm transition-all transform hover:scale-105 shadow-sm hover:bg-white/90">
                         Commencer
@@ -186,27 +155,6 @@
                     <span class="text-white font-bold text-lg tracking-wide">FIDOW</span>
                 </a>
                 <div class="flex items-center space-x-1">
-                    <!-- Dark Mode Toggle Mobile -->
-                    <button
-                        @click="toggleDark()"
-                        class="p-2 rounded-lg hover:bg-white/10 transition-colors text-white"
-                        aria-label="Toggle dark mode"
-                    >
-                        <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                        </svg>
-                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
-                    </button>
                     <button @click="mobileMenu = !mobileMenu" class="p-2 rounded-lg hover:bg-white/10 transition-colors text-white">
                         <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -390,6 +338,223 @@
         </div>
     </div>
 
+    <!-- ════ FIDOW BACKGROUND — Canvas animé global ════
+         Spirales · Réseau de particules · Pluie binaire · Géométrie
+         Visible sur TOUTES les pages et TOUTES les sections. -->
+    <script>
+    (function () {
+        const C = document.getElementById('fidow-bg');
+        if (!C) return;
+        const ctx = C.getContext('2d');
+
+        /* ── Config ─────────────────────────────── */
+        const CFG = {
+            bg:          '#0a0a0d',
+            red:         '135,35,35',
+            white:       '255,255,255',
+            particleN:   55,
+            connDist:    130,
+            colW:        28,
+            gridSize:    64,
+            fps:         30,           // Limite CPU
+        };
+
+        /* ── État ───────────────────────────────── */
+        let W, H, frame = 0, angle = 0;
+        let particles = [], columns = [], lastTime = 0;
+
+        /* ── Resize ─────────────────────────────── */
+        function resize() {
+            W = C.width  = window.innerWidth;
+            H = C.height = window.innerHeight;
+            initColumns();
+        }
+        window.addEventListener('resize', resize, { passive: true });
+
+        /* ── Init particules ────────────────────── */
+        function initParticles() {
+            particles = Array.from({ length: CFG.particleN }, () => ({
+                x:  Math.random() * W,
+                y:  Math.random() * H,
+                vx: (Math.random() - .5) * .35,
+                vy: (Math.random() - .5) * .35,
+                r:  Math.random() * 1.6 + .4,
+            }));
+        }
+
+        /* ── Init colonnes binaires ─────────────── */
+        function initColumns() {
+            const n = Math.ceil(W / CFG.colW) + 1;
+            columns = Array.from({ length: n }, () => ({
+                y:     Math.random() * H * -1,
+                speed: Math.random() * .7 + .15,
+            }));
+        }
+
+        /* ── Dessin grille ──────────────────────── */
+        function drawGrid() {
+            ctx.strokeStyle = `rgba(${CFG.white},0.025)`;
+            ctx.lineWidth = 1;
+            for (let x = 0; x <= W; x += CFG.gridSize) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+            }
+            for (let y = 0; y <= H; y += CFG.gridSize) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+            }
+            // Points pulsants aux croisements
+            const pulse = Math.sin(frame * .025) * .5 + .5;
+            ctx.fillStyle = `rgba(${CFG.red},${.12 * pulse})`;
+            for (let x = 0; x <= W; x += CFG.gridSize * 3) {
+                for (let y = 0; y <= H; y += CFG.gridSize * 3) {
+                    const lp = Math.sin(frame * .025 + x * .001 + y * .001) * .5 + .5;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 1.5 * lp + .5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        /* ── Pluie de code binaire / math ──────── */
+        const CHARS = '01φπ∑∞⌀∂∇{}[]<>/;#'.split('');
+        function drawRain() {
+            ctx.font = '10px "Fira Code",monospace';
+            columns.forEach((col, i) => {
+                const fade = Math.min(1, Math.abs(col.y) / (H * .5));
+                ctx.fillStyle = `rgba(${CFG.red},${.055 * fade})`;
+                ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * CFG.colW, col.y);
+                col.y += col.speed;
+                if (col.y > H + 20) col.y = Math.random() * -300;
+            });
+        }
+
+        /* ── Réseau de particules ───────────────── */
+        function drawNetwork() {
+            particles.forEach(p => {
+                p.x = (p.x + p.vx + W) % W;
+                p.y = (p.y + p.vy + H) % H;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${CFG.red},.45)`;
+                ctx.fill();
+            });
+            ctx.lineWidth = .5;
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const d  = Math.hypot(dx, dy);
+                    if (d < CFG.connDist) {
+                        ctx.strokeStyle = `rgba(${CFG.red},${(1 - d / CFG.connDist) * .14})`;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        /* ── Spirales ───────────────────────────── */
+        function drawSpiral(cx, cy, maxR, turns, dir, a, alpha) {
+            ctx.beginPath();
+            const steps = turns * Math.PI;
+            for (let t = 0; t <= steps; t += .06) {
+                const r = (maxR / steps) * t;
+                const x = cx + r * Math.cos(dir * t + a);
+                const y = cy + r * Math.sin(dir * t + a);
+                t === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = `rgba(${CFG.red},${alpha})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+        function drawSpirals() {
+            const base = Math.min(W, H);
+            drawSpiral(W * .78, H * .22, base * .22, 7, 1,  angle,        .09);
+            drawSpiral(W * .18, H * .78, base * .16, 5, -1, angle * .65,  .07);
+        }
+
+        /* ── Géométrie tournante ────────────────── */
+        const GEO = [
+            { sides:3, xr:.15, yr:.3,  r:90,  speed:.0009, phase:0 },
+            { sides:6, xr:.5,  yr:.12, r:55,  speed:-.0006,phase:1 },
+            { sides:4, xr:.85, yr:.72, r:70,  speed:.0007, phase:2 },
+            { sides:3, xr:.65, yr:.88, r:50,  speed:-.0010,phase:3 },
+            { sides:5, xr:.92, yr:.35, r:44,  speed:.0008, phase:4 },
+            { sides:8, xr:.32, yr:.58, r:38,  speed:-.0005,phase:5 },
+        ];
+        function drawGeometry() {
+            ctx.lineWidth = 1;
+            GEO.forEach(g => {
+                const a = angle * 300 * g.speed + g.phase;
+                ctx.beginPath();
+                for (let i = 0; i <= g.sides; i++) {
+                    const ang = a + (i * 2 * Math.PI) / g.sides;
+                    const x = g.xr * W + g.r * Math.cos(ang);
+                    const y = g.yr * H + g.r * Math.sin(ang);
+                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.strokeStyle = `rgba(${CFG.red},.09)`;
+                ctx.stroke();
+                // Inner concentric
+                ctx.beginPath();
+                for (let i = 0; i <= g.sides; i++) {
+                    const ang = -a + (i * 2 * Math.PI) / g.sides;
+                    const x = g.xr * W + g.r * .5 * Math.cos(ang);
+                    const y = g.yr * H + g.r * .5 * Math.sin(ang);
+                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.strokeStyle = `rgba(${CFG.red},.05)`;
+                ctx.stroke();
+            });
+        }
+
+        /* ── Courbe de Lissajous ────────────────── */
+        function drawLissajous() {
+            const cx = W * .5, cy = H * .5;
+            const rx = Math.min(W, H) * .08, ry = rx;
+            const a = 3, b = 2, delta = angle * .4;
+            ctx.beginPath();
+            for (let t = 0; t <= 2 * Math.PI; t += .03) {
+                const x = cx + rx * Math.sin(a * t + delta);
+                const y = cy + ry * Math.sin(b * t);
+                t === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = `rgba(${CFG.red},.1)`;
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+        }
+
+        /* ── Boucle principale ──────────────────── */
+        const interval = 1000 / CFG.fps;
+        function loop(ts) {
+            requestAnimationFrame(loop);
+            if (ts - lastTime < interval) return;
+            lastTime = ts;
+
+            ctx.fillStyle = CFG.bg;
+            ctx.fillRect(0, 0, W, H);
+
+            drawGrid();
+            drawRain();
+            drawNetwork();
+            drawSpirals();
+            drawGeometry();
+            drawLissajous();
+
+            angle += .003;
+            frame++;
+        }
+
+        /* ── Démarrage ──────────────────────────── */
+        resize();
+        initParticles();
+        requestAnimationFrame(loop);
+    })();
+    </script>
+
     @stack('scripts')
 
     <!-- Global: scroll-progress + data-reveal + page animations -->
@@ -420,45 +585,5 @@
     })();
     </script>
 
-    <!-- Dark Mode Alpine Component -->
-    <script>
-    function themeApp() {
-        return {
-            darkMode: localStorage.getItem('fidow-theme') === 'dark' ||
-                      (!localStorage.getItem('fidow-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches),
-
-            init() {
-                // Apply immediately on init (before Alpine renders)
-                if (this.darkMode) {
-                    document.documentElement.classList.add('dark');
-                }
-                // Watch system preference changes
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                    if (!localStorage.getItem('fidow-theme')) {
-                        this.darkMode = e.matches;
-                    }
-                });
-            },
-
-            toggleDark() {
-                this.darkMode = !this.darkMode;
-                localStorage.setItem('fidow-theme', this.darkMode ? 'dark' : 'light');
-                if (this.darkMode) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-            }
-        }
-    }
-
-    // Apply dark mode BEFORE Alpine hydrates (prevents flash)
-    (function() {
-        const saved = localStorage.getItem('fidow-theme');
-        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
-    })();
-    </script>
 </body>
 </html>

@@ -100,10 +100,11 @@ html.dark .docs-inline { background: rgba(135,35,35,.25); color: #fca5a5; }
 .docs-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
 .docs-card {
     padding: 1.5rem; border-radius: 16px;
-    background: #fff; border: 1.5px solid rgba(0,0,0,.07);
-    box-shadow: 0 2px 12px rgba(0,0,0,.05); transition: all .2s;
+    background: rgba(22,22,25,.88);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255,255,255,.08);
+    box-shadow: 0 2px 12px rgba(0,0,0,.5); transition: all .2s;
 }
-html.dark .docs-card { background: #161619; border-color: rgba(255,255,255,.08); box-shadow: 0 2px 12px rgba(0,0,0,.4); }
 .docs-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(135,35,35,.12); border-color: rgba(135,35,35,.25); }
 .docs-card__icon {
     width: 40px; height: 40px; border-radius: 10px;

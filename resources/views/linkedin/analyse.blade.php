@@ -10,11 +10,8 @@
 
 .li-hero {
     position:relative; overflow:hidden;
-    background:linear-gradient(160deg,#f0f7ff 0%,#fff 50%,#fef7f7 100%);
+    background: transparent;
     padding:5.5rem 1.5rem 0;
-}
-html.dark .li-hero {
-    background:linear-gradient(160deg,#080d14 0%,#0c0c0f 50%,#0f0608 100%);
 }
 
 /* Mesh gradient background */
@@ -208,12 +205,14 @@ html.dark .li-tab.active { background:#1a1a1d; color:#f3f4f6; box-shadow:0 2px 1
 
 /* Form card */
 .li-form-card {
-    background:#fff; border-radius:24px;
-    border:1.5px solid rgba(0,0,0,.07);
-    box-shadow:0 8px 40px rgba(0,0,0,.06);
+    background: rgba(22,22,25,.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius:24px;
+    border:1.5px solid rgba(255,255,255,.08);
+    box-shadow:0 8px 40px rgba(0,0,0,.5);
     padding:2rem;
 }
-html.dark .li-form-card { background:#161619; border-color:rgba(255,255,255,.08); box-shadow:0 8px 40px rgba(0,0,0,.4); }
 
 /* URL input */
 .li-url-wrap {
@@ -313,12 +312,14 @@ html.dark .li-loading__step.active { color:#60a5fa; }
 /* Score header */
 .li-score-block {
     display:flex; gap:2rem; align-items:center;
-    background:#fff; border-radius:24px; padding:2rem;
-    border:1.5px solid rgba(0,0,0,.07);
-    box-shadow:0 8px 40px rgba(0,0,0,.07);
+    background: rgba(22,22,25,.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius:24px; padding:2rem;
+    border:1.5px solid rgba(255,255,255,.08);
+    box-shadow:0 8px 40px rgba(0,0,0,.5);
     margin-bottom:1.5rem; flex-wrap:wrap;
 }
-html.dark .li-score-block { background:#161619; border-color:rgba(255,255,255,.08); }
 
 .li-gauge-wrap { flex-shrink:0; }
 .li-gauge {

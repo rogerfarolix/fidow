@@ -754,16 +754,8 @@
     position:absolute; inset:0;
     background:linear-gradient(
         to right,
-        var(--bg-body,#fef7f7) 0%,
-        rgba(254,247,247,.6) 30%,
-        transparent 60%
-    );
-}
-html.dark .fhero__photo-vignette {
-    background:linear-gradient(
-        to right,
-        var(--bg-body,#0c0c0f) 0%,
-        rgba(12,12,15,.6) 30%,
+        #0c0c0f 0%,
+        rgba(12,12,15,.7) 30%,
         transparent 60%
     );
 }
@@ -930,29 +922,11 @@ html.dark .fmockup-list-item { border-color:rgba(255,255,255,.03); }
     .fmockup-row { flex-direction:column; }
 }
 
-/* ── VARIABLES ───────────────────────────────────────────────── */
+/* ── VARIABLES (dark only) ──────────────────────────────────── */
 :root {
     --fr:       #872323;
     --frd:      #6b1c1c;
     --ease:     cubic-bezier(.16,1,.3,1);
-    --bg-body:  #fef7f7;
-    --bg-white: #ffffff;
-    --bg-off:   #fdf3f3;
-    --text-1:   #111111;
-    --text-2:   #374151;
-    --text-3:   #6b7280;
-    --text-4:   #9ca3af;
-    --border:   rgba(0,0,0,.07);
-    --shadow-s: 0 2px 12px rgba(0,0,0,.05);
-    --shadow-m: 0 8px 32px rgba(0,0,0,.08);
-    --shadow-l: 0 20px 60px rgba(0,0,0,.12);
-    --radius-s: 10px;
-    --radius-m: 16px;
-    --radius-l: 22px;
-}
-
-/* ── DARK MODE VARIABLES ─────────────────────────────────────── */
-html.dark {
     --bg-body:  #0c0c0f;
     --bg-white: #161619;
     --bg-off:   #111114;
@@ -964,23 +938,29 @@ html.dark {
     --shadow-s: 0 2px 12px rgba(0,0,0,.4);
     --shadow-m: 0 8px 32px rgba(0,0,0,.5);
     --shadow-l: 0 20px 60px rgba(0,0,0,.65);
+    --radius-s: 10px;
+    --radius-m: 16px;
+    --radius-l: 22px;
 }
 
-/* ── DARK MODE SPECIFIC OVERRIDES ────────────────────────────── */
-html.dark .fhero { background: var(--bg-body); }
-html.dark .fhero__bg { opacity: .6; }
-html.dark .fstrip { background: #111114; border-color: rgba(255,255,255,.05); }
-html.dark .fsec { background: var(--bg-white); }
-html.dark .fsec--off { background: var(--bg-off); }
-html.dark .fsec--tools { background: var(--bg-white); }
-html.dark .fsec--stat-row { background: var(--bg-off); }
-html.dark .fsec--cta-wrap { background: var(--bg-off); }
-html.dark .fwhy__card { background: var(--bg-white); }
-html.dark .ftool { background: var(--bg-white); border-color: var(--border); }
-html.dark .ftool--active { background: linear-gradient(160deg, var(--bg-white) 60%, #1a0d0d 100%); border-color: rgba(135,35,35,.3); }
-html.dark .ftool--soon { background: var(--bg-off); }
-html.dark .ftool__cta--disabled { background: #1f2937; color: var(--text-4); }
-html.dark .fstat-row { background: var(--bg-white); border-color: var(--border); }
+/* ── OVERRIDES DARK (sections transparentes, canvas visible) ─── */
+.fhero { background: transparent; }
+.fhero__bg { opacity: .35; }
+.fstrip { background: rgba(255,255,255,.025); border-color: rgba(255,255,255,.06); }
+.fsec { background: transparent; }
+.fsec--off { background: rgba(255,255,255,.012); }
+.fsec--tools { background: transparent; }
+.fsec--stat-row { background: rgba(255,255,255,.015); }
+.fsec--cta-wrap { background: transparent; }
+.fwhy__card { background: rgba(22,22,25,.85); border-color: var(--border); backdrop-filter:blur(8px); }
+.ftool { background: rgba(22,22,25,.85); border-color: var(--border); backdrop-filter:blur(8px); }
+.ftool--active { background: rgba(26,14,14,.9); border-color: rgba(135,35,35,.3); }
+.ftool__cta--disabled { background: rgba(31,41,55,.8); color: var(--text-4); }
+.fstat-row { background: rgba(22,22,25,.85); border-color: var(--border); backdrop-filter:blur(8px); }
+.fstats { background: rgba(22,22,25,.85); border-color: var(--border); backdrop-filter:blur(8px); }
+.ftesti { background: rgba(22,22,25,.85); border-color: var(--border); backdrop-filter:blur(8px); }
+.ftesti--feat { background: rgba(26,12,12,.9); border-color: rgba(135,35,35,.25); }
+.fwhy__mockup { filter: drop-shadow(0 16px 40px rgba(135,35,35,.18)); }
 html.dark .fstats { background: var(--bg-white); border-color: var(--border); }
 html.dark .ftesti { background: var(--bg-white); border-color: var(--border); }
 html.dark .ftesti--feat { background: linear-gradient(135deg, #1a0c0c, #161619); border-color: rgba(135,35,35,.2); }
@@ -992,7 +972,7 @@ html.dark .fblob--top { background: radial-gradient(ellipse, rgba(135,35,35,.25)
 /* ── BASE ────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-    background-color: var(--bg-body);
+    background: transparent;    /* canvas global fournit le fond */
     color: var(--text-2);
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
